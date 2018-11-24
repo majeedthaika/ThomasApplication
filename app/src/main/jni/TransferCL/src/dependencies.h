@@ -20,7 +20,7 @@
 #define TRANSFER 1
 #define DISPLAY_LOSS 1
 #define DISPLAY_WEIGHT 0
-#define TRANSFERCL_VERBOSE 0
+#define TRANSFERCL_VERBOSE 1
 
 
 #define MNIST_TEST 1

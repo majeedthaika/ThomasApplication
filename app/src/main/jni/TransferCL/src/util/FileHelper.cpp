@@ -67,7 +67,7 @@ LOGI( "DeepCL/src/util/FileHelper.cpp: readBinaryChunk");
 
     std::string localPath = localizePath(filepath);
 
-   LOGI( "localPath %s",localPath.c_str());
+//    LOGI( "localPath %s",localPath.c_str());
     std::ifstream file(localPath.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
 //    LOGI( "file define");
     if(!file.is_open()) {

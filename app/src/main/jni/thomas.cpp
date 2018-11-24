@@ -262,7 +262,7 @@ Java_com_thomas_thomasapplication_MainActivity_prepareFiles(JNIEnv* env, jclass 
 	string stringManifestPath=jstring2string(env,manifestPath);
 	string path2=path+"directoryTest/";
 	mkdirretval=mkpath(path2.c_str(),0755);
-	LOGI("%s", path2.c_str());
+	// LOGI("%s", path2.c_str());
 	LOGI("-------Creation of the working directory");
 	if (-1 == mkdirretval)
 	{
@@ -271,7 +271,7 @@ Java_com_thomas_thomasapplication_MainActivity_prepareFiles(JNIEnv* env, jclass 
 
 	string path3=path+"directoryTest/binariesKernel/";
 	mkdirretval=mkpath(path3.c_str(),0755);
-	LOGI("%s", path3.c_str());
+	// LOGI("%s", path3.c_str());
 	if (-1 == mkdirretval)
 	{
 		LOGI("-----------Directory creation failed: the directory already exists");
