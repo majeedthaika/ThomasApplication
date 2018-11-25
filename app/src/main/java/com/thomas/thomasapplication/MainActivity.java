@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 int imageSize=28;
                 int numOfChannel=1;//black and white => 1; color =>3
                 String storeweightsfile="/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat";
-                String loadweightsfile="/sdcard1/preloadingData/weightstface1.dat";
+                String loadweightsfile="/mnt/sdcard/Download/preloadingData/weightstface1.dat";
                 String loadnormalizationfile="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
                 String networkDefinition="1s8c5z-relu-mp2-1s16c5z-relu-mp3-152n-tanh-10n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
                 int numepochs=100;
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Runnable runnable = new Runnable() {
             public void run() {
                 String appDirctory ="/data/data/"+applicationName+"/";
-                String cmdString ="./predict weightsfile=/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat  inputfile=/sdcard1/character/manifest4.txt outputfile=/data/data/"+applicationName+"/preloadingData/pred2.txt";
+                String cmdString ="./predict weightsfile=/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat  inputfile=/mnt/sdcard/Download/manifest_trial.txt outputfile=/data/data/"+applicationName+"/directoryTest/pred.txt";
                 prediction(appDirctory,cmdString);
 
             }
