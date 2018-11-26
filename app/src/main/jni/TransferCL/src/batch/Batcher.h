@@ -42,6 +42,7 @@ protected:
     float const* data;
     int const* labels;
     bool trainOrTest;
+    std::vector<int> indexes;
 
     /////////////////
     float const* dataTest;
@@ -87,6 +88,9 @@ public:
     VIRTUAL void setN(int N);
     PUBLICAPI bool tick(int epoch);
     PUBLICAPI EpochResult run(int epoch);
+    PUBLICAPI void randomize_batch();
+    PUBLICAPI float* shuffle_data();
+    PUBLICAPI int* shuffle_label();
 
     // [[[end]]]
 };

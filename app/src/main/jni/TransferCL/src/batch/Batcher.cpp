@@ -91,6 +91,7 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: reset");
     numRight = 0;
     loss = 0;
     epochDone = false;
+    randomize_batch();
 }
 /// \brief what is the index of the next batch to process?
 PUBLICAPI int Batcher::getNextBatch() {
@@ -161,25 +162,55 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: setN");
     this->numBatches = (N + batchSize - 1) / batchSize;
 }
 
-// PUBLICAPI void Batcher::randomize_batch(){
-// #if TRANSFERCL_VERBOSE == 1
-// LOGI( "DeepCL/src/batch/Batcher.cpp: randomize_batch");
-// #endif
+PUBLICAPI void Batcher::randomize_batch(){
+#if TRANSFERCL_VERBOSE == 1
+LOGI( "DeepCL/src/batch/Batcher.cpp: randomize_batch");
+#endif
 
-//     std::vector<int> indexes;
-//     indexes.reserve(N);
-//     for (int i = 0; i < N; ++i)
-//         indexes.push_back(i);
-//     std::random_shuffle(indexes.begin(), indexes.end());
+    std::vector<int> indexes;
+    indexes.reserve(N);
+    for (int i = 0; i < N; ++i)
+        indexes.push_back(i);
+    std::random_shuffle(indexes.begin(), indexes.end());
 
-//     // std::cout << "vector1 contains:";
-//     // for ( std::vector<int>::iterator it1 = indexes.begin(); it1 != indexes.end(); ++it1 )
-//     //     std::cout << ' ' << vector1[*it1];
-
-//     // std::random_shuffle(dataTest[0], dataTest[N-1]);
+}
 
 
-// }
+PUBLICAPI float* Batcher::shuffle_data(){
+#if TRANSFERCL_VERBOSE == 1
+LOGI( "DeepCL/src/batch/Batcher.cpp: shuffle_data");
+#endif
+
+    float* shuffle_data = new float[ (long)batchSize * inputCubeSize ];
+
+    int counter = 0;
+    for ( std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it ){
+
+        for (int i=0; i<inputCubeSize; i++){
+            shuffle_data[counter + i] = shuffle_data[*it + i];
+        }
+        counter++;
+    }
+
+    return shuffle_data;
+}
+
+PUBLICAPI int* Batcher::shuffle_label(){
+#if TRANSFERCL_VERBOSE == 1
+LOGI( "DeepCL/src/batch/Batcher.cpp: shuffle_label");
+#endif
+
+    int* shuffle_label = new int[batchSize];
+
+    int counter = 0;
+    for ( std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it ){
+        shuffle_label[counter] = labelTest[*it];
+        counter++;
+    }
+
+    return shuffle_label;
+
+}
 
 /// \brief processes one single batch of data
 ///
@@ -213,9 +244,9 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: tick");
     }
 #if MEMORY_MAP_FILE_LOADING==1
     net->setBatchSize(thisBatchSize);
-    // float* dataBuffer = shuffle_data(indices);
-    // int* labelBuffer = shuffle_label(indices);
-    epochResult = internalTick(epoch, &(dataTest[ batchStart * inputCubeSize ]), &(labelTest[batchStart]));
+    float* dataBuffer = shuffle_data();
+    int* labelBuffer = shuffle_label();
+    epochResult = internalTick(epoch, &(dataBuffer[ batchStart * inputCubeSize ]), &(labelBuffer[batchStart]));
 
     if (dynamic_cast<ForwardBatcher *>(this)||dynamic_cast<NetActionBatcher *>(this)){
     	net->calcLossFromLabels(&(labelTest[batchStart]/*labels[batchStart]*/));

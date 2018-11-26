@@ -215,7 +215,7 @@ void TrainModel::go(ConfigTraining config) {
 	    float translate;
 	    float scale;
 
-	    
+
 #if MEMORY_MAP_FILE_LOADING==0
         int normalizationExamples = config.normalizationExamples > Ntrain ? Ntrain : config.normalizationExamples;
 	    if(!config.loadOnDemand) {
@@ -348,6 +348,8 @@ void TrainModel::go(ConfigTraining config) {
 		struct timeval start, end;
 		/*get the start time*/
 		gettimeofday(&start, NULL);
+
+		// Main loop responsible for training
 	    while(!netLearner->isLearningDone()) {//i<100){//
 
 	    	i++;
