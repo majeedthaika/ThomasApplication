@@ -208,9 +208,14 @@ void TrainModel::go(ConfigTraining config) {
 
 	    timer.timeCheck("after load images");
 		#endif
+
+
+
 	    const int inputCubeSize = numPlanes * imageSize * imageSize;
 	    float translate;
 	    float scale;
+
+	    
 #if MEMORY_MAP_FILE_LOADING==0
         int normalizationExamples = config.normalizationExamples > Ntrain ? Ntrain : config.normalizationExamples;
 	    if(!config.loadOnDemand) {

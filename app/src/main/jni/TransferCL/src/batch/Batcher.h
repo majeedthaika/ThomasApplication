@@ -62,7 +62,7 @@ protected:
     BatchResult epochResult;
 
 public:
-    virtual void internalTick(int epoch, float const*batchData, int const*batchLabels) = 0;
+    virtual BatchResult internalTick(int epoch, float const*batchData, int const*batchLabels) = 0;
 
     // [[[cog
     // import cog_addheaders
@@ -98,7 +98,7 @@ public:
 
     LearnBatcher(Trainer *trainer,
         Trainable *net, int batchSize, int N, float *data, int const*labels, string memory_map_file_labed,string memory_map_file_data);
-    virtual void internalTick(int epoch, float const*batchData, int const*batchLabels);
+    virtual BatchResult internalTick(int epoch, float const*batchData, int const*batchLabels);
 };
 
 //class TransferCL_EXPORT LearnFromExpectedBatcher : public Batcher {
@@ -115,12 +115,12 @@ class TransferCL_EXPORT NetActionBatcher : public Batcher {
 public:
     NetAction * netAction;
     NetActionBatcher(Trainable *net, int batchSize, int N, float *data, int const*labels, NetAction * netAction, string memory_map_file_labed,string memory_map_file_data);
-    virtual void internalTick(int epoch, float const*batchData, int const*batchLabels);
+    virtual BatchResult internalTick(int epoch, float const*batchData, int const*batchLabels);
 };
 
 
 class TransferCL_EXPORT ForwardBatcher : public Batcher {
 public:
     ForwardBatcher(Trainable *net, int batchSize, int N, float *data, int const*labels, string memory_map_file_labed,string memory_map_file_data);
-    virtual void internalTick(int epoch, float const*batchData, int const*batchLabels);
+    virtual BatchResult internalTick(int epoch, float const*batchData, int const*batchLabels);
 };

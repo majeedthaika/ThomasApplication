@@ -77,6 +77,9 @@ file4.close();
 file3.close();
 
 }
+
+
+
 /// \brief reset to the first batch, and set epochDone to false
 PUBLICAPI void Batcher::reset() {
 #if TRANSFERCL_VERBOSE == 1
@@ -157,6 +160,27 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: setN");
     this->N = N;
     this->numBatches = (N + batchSize - 1) / batchSize;
 }
+
+// PUBLICAPI void Batcher::randomize_batch(){
+// #if TRANSFERCL_VERBOSE == 1
+// LOGI( "DeepCL/src/batch/Batcher.cpp: randomize_batch");
+// #endif
+
+//     std::vector<int> indexes;
+//     indexes.reserve(N);
+//     for (int i = 0; i < N; ++i)
+//         indexes.push_back(i);
+//     std::random_shuffle(indexes.begin(), indexes.end());
+
+//     // std::cout << "vector1 contains:";
+//     // for ( std::vector<int>::iterator it1 = indexes.begin(); it1 != indexes.end(); ++it1 )
+//     //     std::cout << ' ' << vector1[*it1];
+
+//     // std::random_shuffle(dataTest[0], dataTest[N-1]);
+
+
+// }
+
 /// \brief processes one single batch of data
 ///
 /// could be learning for one batch, or prediction/testing for one batch
@@ -176,18 +200,22 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: tick");
 #endif
 
     if(epochDone) {
+        // indices = randomize_batch();
         reset();
     }
     int batch = nextBatch;
 //    std::cout << "BatchLearner.tick() batch=" << batch << std::endl;
     int batchStart = batch * batchSize;
     int thisBatchSize = batchSize;
+    // For the last batch, batchsize might be variable
     if(batch == numBatches - 1) {
         thisBatchSize = N - batchStart;
     }
 #if MEMORY_MAP_FILE_LOADING==1
     net->setBatchSize(thisBatchSize);
-    internalTick(epoch, &(dataTest[ batchStart * inputCubeSize ]), &(labelTest[batchStart]));
+    // float* dataBuffer = shuffle_data(indices);
+    // int* labelBuffer = shuffle_label(indices);
+    epochResult = internalTick(epoch, &(dataTest[ batchStart * inputCubeSize ]), &(labelTest[batchStart]));
 
     if (dynamic_cast<ForwardBatcher *>(this)||dynamic_cast<NetActionBatcher *>(this)){
     	net->calcLossFromLabels(&(labelTest[batchStart]/*labels[batchStart]*/));
@@ -232,6 +260,9 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: tick");
     nextBatch++;
     if(nextBatch == numBatches) {
         epochDone = true;
+        // LOGI("----Epoch Done----");
+        LOGI("Epoch num: %d sum loss %f numRight %d", epoch, loss, numRight);
+        // LOGI("----Epoch Done----");
     }
 #if TRANSFERCL_VERBOSE == 1
     LOGI("DeepCL\\src\\batch\\batcher.cpp: end batcher ticker");
@@ -270,7 +301,7 @@ LearnBatcher::LearnBatcher(Trainer *trainer, Trainable *net,
     Batcher(net, batchSize, N, data, labels,true, memory_map_file_labed, memory_map_file_data),
     trainer(trainer) {
 }
-VIRTUAL void LearnBatcher::internalTick(int epoch, float const*batchData, int const*batchLabels) {
+VIRTUAL BatchResult LearnBatcher::internalTick(int epoch, float const*batchData, int const*batchLabels) {
 #if TRANSFERCL_VERBOSE == 1
 LOGI( "DeepCL/src/batch/Batcher.cpp: LearnBatcher::internalTick");
 #endif
@@ -279,6 +310,7 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: LearnBatcher::internalTick");
 
     TrainingContext context(epoch, nextBatch);
     epochResult=trainer->trainFromLabels(net, &context, batchData, batchLabels);
+    return epochResult;
 }
 
 NetActionBatcher::NetActionBatcher(Trainable *net, int batchSize, int N, float *data, int const*labels, NetAction *netAction, string memory_map_file_labed,string memory_map_file_data) :
@@ -287,7 +319,7 @@ NetActionBatcher::NetActionBatcher(Trainable *net, int batchSize, int N, float *
 
 	LOGI("NetActionBatcher::NetActionBatcher ERROR");
 }
-void NetActionBatcher::internalTick(int epoch, float const*batchData, int const*batchLabels) {
+BatchResult NetActionBatcher::internalTick(int epoch, float const*batchData, int const*batchLabels) {
 #if TRANSFERCL_VERBOSE == 1
 LOGI( "DeepCL/src/batch/Batcher.cpp: NetActionBatcher::internalTick");
 #endif
@@ -295,17 +327,20 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: NetActionBatcher::internalTick");
     //olivier: computing path goes here
     netAction->run(this->net, epoch, nextBatch, batchData, batchLabels);
     epochResult=netAction->epochResult;
+    return epochResult;
 }
 ForwardBatcher::ForwardBatcher(Trainable *net, int batchSize, int N, float *data, int const*labels, string memory_map_file_labed,string memory_map_file_data) :
     Batcher(net, batchSize, N, data, labels,false, memory_map_file_labed, memory_map_file_data) {
 	LOGI( "---------------------ForwardBatcher");
 }
-void ForwardBatcher::internalTick(int epoch, float const*batchData, int const*batchLabels) {
+BatchResult ForwardBatcher::internalTick(int epoch, float const*batchData, int const*batchLabels) {
 #if TRANSFERCL_VERBOSE == 1
 LOGI( "DeepCL/src/batch/Batcher.cpp: internalTick");
 #endif
 
 
     this->net->forward(batchData);
+    // epochResult = this->net->
+    // return epochResult;
 }
 

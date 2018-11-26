@@ -1,13 +1,13 @@
 obj/local/armeabi-v7a/objs/transferCL/TransferCL/src/trainers/SGDMaker.o: \
  jni/TransferCL/src/trainers/SGDMaker.cpp \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream \
  jni/TransferCL/src/trainers/SGDMaker.h \
  jni/TransferCL/src/trainers/../dependencies.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm \
  jni/TransferCL/src/trainers/TrainerMaker.h \
  jni/TransferCL/src/trainers/SGD.h \
  jni/TransferCL/src/trainers/../fc/FullyConnectedLayer.h \
@@ -19,24 +19,24 @@ obj/local/armeabi-v7a/objs/transferCL/TransferCL/src/trainers/SGDMaker.o: \
  jni/TransferCL/src/trainers/../fc/../layer/../util/../TransferCLDllExport.h \
  jni/TransferCL/src/trainers/../fc/../layer/../util/../dependencies.h \
  jni/TransferCL/src/trainers/../fc/../layer/../util/mt19937defs.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/chrono \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/chrono \
  jni/TransferCL/src/trainers/../fc/../layer/../activate/ActivationFunction.h \
  jni/TransferCL/src/trainers/../fc/../layer/../activate/../dependencies.h \
  jni/TransferCL/src/trainers/../fc/../layer/LayerMaker.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cstring \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cstring \
  jni/TransferCL/src/trainers/../fc/../layer/../util/stringhelper.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/sstream \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/sstream \
  jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/EasyCL.h \
  jni/../include/CL/cl.hpp jni/../include/CL/opencl.h \
  jni/../include/CL/cl.h jni/../include/CL/cl_platform.h \
  jni/../include/CL/cl_gl.h jni/../include/CL/cl_gl_ext.h \
  jni/../include/CL/cl_ext.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cassert \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/fstream \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/map \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cassert \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/fstream \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/map \
  jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/../../kernelManager/ConfigManager.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iterator \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/unordered_map \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iterator \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/unordered_map \
  jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/../../kernelManager/../TransferCL/src/dependencies.h \
  jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/deviceinfo_helper.h \
  jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/mystdint.h \
@@ -58,7 +58,7 @@ obj/local/armeabi-v7a/objs/transferCL/TransferCL/src/trainers/SGDMaker.o: \
  jni/TransferCL/src/trainers/../fc/../conv/../dependencies.h \
  jni/TransferCL/src/trainers/../fc/../conv/../activate/ActivationLayer.h \
  jni/TransferCL/src/trainers/../fc/../conv/../activate/../dependencies.h \
- /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/typeinfo \
+ /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/typeinfo \
  jni/TransferCL/src/trainers/../fc/../conv/../util/Timer.h \
  jni/TransferCL/src/trainers/../fc/../conv/../util/../dependencies.h \
  jni/TransferCL/src/trainers/../fc/../conv/../../EasyCL/util/StatefulTimer.h \
@@ -72,21 +72,21 @@ obj/local/armeabi-v7a/objs/transferCL/TransferCL/src/trainers/SGDMaker.o: \
  jni/TransferCL/src/trainers/Trainer.h \
  jni/TransferCL/src/trainers/TrainingContext.h
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream:
 
 jni/TransferCL/src/trainers/SGDMaker.h:
 
 jni/TransferCL/src/trainers/../dependencies.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm:
 
 jni/TransferCL/src/trainers/TrainerMaker.h:
 
@@ -110,7 +110,7 @@ jni/TransferCL/src/trainers/../fc/../layer/../util/../dependencies.h:
 
 jni/TransferCL/src/trainers/../fc/../layer/../util/mt19937defs.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/chrono:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/chrono:
 
 jni/TransferCL/src/trainers/../fc/../layer/../activate/ActivationFunction.h:
 
@@ -118,11 +118,11 @@ jni/TransferCL/src/trainers/../fc/../layer/../activate/../dependencies.h:
 
 jni/TransferCL/src/trainers/../fc/../layer/LayerMaker.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cstring:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cstring:
 
 jni/TransferCL/src/trainers/../fc/../layer/../util/stringhelper.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/sstream:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/sstream:
 
 jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/EasyCL.h:
 
@@ -140,17 +140,17 @@ jni/../include/CL/cl_gl_ext.h:
 
 jni/../include/CL/cl_ext.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cassert:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/cassert:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/fstream:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/fstream:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/map:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/map:
 
 jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/../../kernelManager/ConfigManager.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iterator:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iterator:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/unordered_map:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/unordered_map:
 
 jni/TransferCL/src/trainers/../fc/../layer/../../EasyCL/../../kernelManager/../TransferCL/src/dependencies.h:
 
@@ -194,7 +194,7 @@ jni/TransferCL/src/trainers/../fc/../conv/../activate/ActivationLayer.h:
 
 jni/TransferCL/src/trainers/../fc/../conv/../activate/../dependencies.h:
 
-/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/typeinfo:
+/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/typeinfo:
 
 jni/TransferCL/src/trainers/../fc/../conv/../util/Timer.h:
 
