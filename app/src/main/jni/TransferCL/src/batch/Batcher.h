@@ -91,6 +91,7 @@ public:
     PUBLICAPI void randomize_batch();
     PUBLICAPI float* shuffle_data();
     PUBLICAPI int* shuffle_label();
+    PUBLICAPI void print_indices();
 
     // [[[end]]]
 };

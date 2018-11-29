@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String loadweightsfile="/mnt/sdcard/Download/preloadingData/weightstface1.dat";
                 String loadnormalizationfile="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
                 String networkDefinition="1s8c5z-relu-mp2-1s16c5z-relu-mp3-152n-tanh-10n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
-                int numepochs=100;
+                int numepochs=50;
                 int batchsize=100;
                 int numtrain=600;
                 float learningRate=0.01f;

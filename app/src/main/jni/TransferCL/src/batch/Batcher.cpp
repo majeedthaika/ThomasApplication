@@ -67,6 +67,8 @@ PUBLICAPI Batcher::Batcher(Trainable *net, int batchSize, int N, float *data, in
 	/////////////////////////////
     inputCubeSize = net->getInputCubeSize();
     numBatches = (N + batchSize - 1) / batchSize;
+    indexes.reserve(N);
+    for (int i = 0; i < N; ++i) indexes.push_back(i);
     reset();
 }
 VIRTUAL Batcher::~Batcher() {
@@ -91,6 +93,7 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: reset");
     numRight = 0;
     loss = 0;
     epochDone = false;
+    // print_indices();
     randomize_batch();
 }
 /// \brief what is the index of the next batch to process?
@@ -162,17 +165,25 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: setN");
     this->numBatches = (N + batchSize - 1) / batchSize;
 }
 
+PUBLICAPI void Batcher::print_indices(){
+    int ctr = 0;
+    for ( std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it ){
+        LOGI("| %d | ", *it);
+        ctr ++;
+        if (ctr > 10)
+            break;
+    }
+}
+
 PUBLICAPI void Batcher::randomize_batch(){
 #if TRANSFERCL_VERBOSE == 1
 LOGI( "DeepCL/src/batch/Batcher.cpp: randomize_batch");
 #endif
 
-    std::vector<int> indexes;
-    indexes.reserve(N);
-    for (int i = 0; i < N; ++i)
-        indexes.push_back(i);
+    // std::vector<int> indexes;
     std::random_shuffle(indexes.begin(), indexes.end());
 
+    // print_indices();
 }
 
 
@@ -181,13 +192,14 @@ PUBLICAPI float* Batcher::shuffle_data(){
 LOGI( "DeepCL/src/batch/Batcher.cpp: shuffle_data");
 #endif
 
-    float* shuffle_data = new float[ (long)batchSize * inputCubeSize ];
+    float* shuffle_data = new float[ (long)N * inputCubeSize ];
 
     int counter = 0;
+    // LOGI("inputCubeSize: %d", inputCubeSize);
     for ( std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it ){
 
         for (int i=0; i<inputCubeSize; i++){
-            shuffle_data[counter + i] = shuffle_data[*it + i];
+            shuffle_data[counter * inputCubeSize + i] = dataTest[*it * inputCubeSize + i];
         }
         counter++;
     }
@@ -200,13 +212,24 @@ PUBLICAPI int* Batcher::shuffle_label(){
 LOGI( "DeepCL/src/batch/Batcher.cpp: shuffle_label");
 #endif
 
-    int* shuffle_label = new int[batchSize];
+    int* shuffle_label = new int[N];
 
     int counter = 0;
     for ( std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it ){
         shuffle_label[counter] = labelTest[*it];
         counter++;
     }
+
+    //test label
+    // int ctr = 0;
+    // for (int i = 0; i < N; i++){
+    //     if (shuffle_label[i] != labelTest[i]){
+    //         LOGI("label error!");
+    //     }
+    //     ctr++;
+    //     if (ctr > 10)
+    //         break;
+    // }
 
     return shuffle_label;
 
@@ -246,7 +269,10 @@ LOGI( "DeepCL/src/batch/Batcher.cpp: tick");
     net->setBatchSize(thisBatchSize);
     float* dataBuffer = shuffle_data();
     int* labelBuffer = shuffle_label();
+    // print_indices();
+    // epochResult = internalTick(epoch, &(dataTest[ batchStart * inputCubeSize ]), &(labelTest[batchStart]));
     epochResult = internalTick(epoch, &(dataBuffer[ batchStart * inputCubeSize ]), &(labelBuffer[batchStart]));
+    // epochResult = internalTick(epoch, &(dataBuffer[0]), &(labelBuffer[0]));
 
     if (dynamic_cast<ForwardBatcher *>(this)||dynamic_cast<NetActionBatcher *>(this)){
     	net->calcLossFromLabels(&(labelTest[batchStart]/*labels[batchStart]*/));
