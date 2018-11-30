@@ -47,6 +47,8 @@ protected:
     /////////////////
     float const* dataTest;
     int const* labelTest;
+    float* dataBuffer = shuffle_data();
+    int* labelBuffer = shuffle_label();
     boost::iostreams::mapped_file file3;
     boost::iostreams::mapped_file file4;
 

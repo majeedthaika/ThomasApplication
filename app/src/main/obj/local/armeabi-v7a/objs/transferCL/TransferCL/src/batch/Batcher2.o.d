@@ -1,13 +1,13 @@
 obj/local/armeabi-v7a/objs/transferCL/TransferCL/src/batch/Batcher2.o: \
  jni/TransferCL/src/batch/Batcher2.cpp \
- /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream \
+ /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream \
  jni/TransferCL/src/batch/../net/Trainable.h \
  jni/TransferCL/src/batch/../net/../dependencies.h \
- /Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h \
- /Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h \
- /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h \
- /Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h \
- /Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm \
+ /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h \
+ /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h \
+ /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h \
+ /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h \
+ /Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm \
  jni/TransferCL/src/batch/../net/../TransferCLDllExport.h \
  jni/TransferCL/src/batch/../net/../dependencies.h \
  jni/TransferCL/src/batch/../trainers/Trainer.h \
@@ -18,21 +18,21 @@ obj/local/armeabi-v7a/objs/transferCL/TransferCL/src/batch/Batcher2.o: \
  jni/TransferCL/src/batch/NetAction2.h \
  jni/TransferCL/src/batch/BatchData.h
 
-/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream:
+/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/iostream:
 
 jni/TransferCL/src/batch/../net/Trainable.h:
 
 jni/TransferCL/src/batch/../net/../dependencies.h:
 
-/Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h:
+/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/math.h:
 
-/Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h:
+/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/crystax/freebsd/lib/msun/src/mangled-math.h:
 
-/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h:
+/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/crystax/include/crystax/sys/math.h:
 
-/Users/Aviral/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h:
+/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/platforms/android-19/arch-arm/usr/include/android/log.h:
 
-/Users/Aviral/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm:
+/Users/majeedthaika/Downloads/crystax-ndk-10.3.2/sources/cxx-stl/gnu-libstdc++/5/include/algorithm:
 
 jni/TransferCL/src/batch/../net/../TransferCLDllExport.h:
 
