@@ -216,13 +216,13 @@ VIRTUAL void Forward1::forwardHalf(int batchSize, CLWrapper *dataWrapper, CLWrap
     #endif
     LOGI("test->run_1d(globalSize, workgroupsize);");
 
-    std::ofstream out;
-    string s=cl->absolutePath+test->getKernelName()+"_kernelcode.cpp";
-    out.open(s.c_str()/*"/data/data/com.sony.openclexample1/preloadingData/kernelcode.txt"*/, std::ios::app);
-    out << test->getKernelName();
-    out << "\n";
-    out << test->getSource();
-    out.close();
+    // std::ofstream out;
+    // string s=cl->absolutePath+test->getKernelName()+"_kernelcode.cpp";
+    // out.open(s.c_str(), std::ios::app);
+    // out << test->getKernelName();
+    // out << "\n";
+    // out << test->getSource();
+    // out.close();
 
     test->run_1d(globalSize, workgroupsize);
     //cl->finish();
@@ -432,7 +432,7 @@ Forward1::Forward1(bool needToNormalize,int batchSize,EasyCL *cl, LayerDimension
 
 	normalization=needToNormalize;
 	setup=false;
-	#if TEST_FORWARD==1
+	// #if TEST_FORWARD==1
     	// addBias = new AddBias(cl);
     	LOGI("2)numFilters %d",dim.numFilters);
 
@@ -444,124 +444,124 @@ Forward1::Forward1(bool needToNormalize,int batchSize,EasyCL *cl, LayerDimension
     // stringify.write_kernel2("kernel", "cl/forward1.cl", "convolve_imagecubes_float2", 'options')
     // ]]]
     // generated using cog, from cl/forward1.cl:
-    const char * kernelSource =
-    	    "void kernel convolve_imagecubes_float2(\n"
-    	    "    const int numExamples,\n"
-    	    "      global const float *inputs, global const float *filters,\n"
-    	    "    global float *output) {\n"
-    	    "    int globalId = get_global_id(0);\n"
-    	    "\n"
-    	    "    int exampleId = (globalId / gOutputSizeSquared) / gNumFilters;\n"
-    	    "    int filterId = (globalId / gOutputSizeSquared) % gNumFilters;\n"
-    	    "\n"
-    	    "    // intraimage coords\n"
-    	    "    int outputRow = (globalId % gOutputSizeSquared) / gOutputSize;\n"
-    	    "    int outputCol = (globalId % gOutputSizeSquared) % gOutputSize;\n"
-    	    "\n"
-    	    "\n"
-    	    "    float sum = 0;\n"
-    	    "    if (exampleId < numExamples) {\n"
-    	    "        for (int inputPlaneIdx = 0; inputPlaneIdx < gNumInputPlanes; inputPlaneIdx++) {\n"
-    	    "            global float const*inputPlane = inputs + exampleId * gNumInputPlanes * gInputSizeSquared + inputPlaneIdx * gInputSizeSquared;\n"
-    	    "            global float const*filterPlane = filters + filterId * gNumInputPlanes * gFilterSizeSquared + inputPlaneIdx * gFilterSizeSquared;\n"
-    	    "            for (int u = -gHalfFilterSize; u <= gHalfFilterSize - gEven; u++) {\n"
-    	    "                // trying to reduce register pressure...\n"
-    	    "                #if gPadZeros == 1\n"
-    	    "                    #define inputRowIdx (outputRow + u)\n"
-    	    "                #else\n"
-    	    "                    #define inputRowIdx (outputRow + u + gHalfFilterSize)\n"
-    	    "                #endif\n"
-    	    "                global float const *inputRow = inputPlane + inputRowIdx * gInputSize;\n"
-    	    "                global float const *filterRow = filterPlane + (u+gHalfFilterSize) * gFilterSize + gHalfFilterSize;\n"
-    	    "                bool rowOk = inputRowIdx >= 0 && inputRowIdx < gInputSize;\n"
-    	    "                #pragma unroll\n"
-    	    "                for (int v = -gHalfFilterSize; v <= gHalfFilterSize - gEven; v++) {\n"
-    	    "                    #if gPadZeros == 1\n"
-    	    "                        #define inputColIdx (outputCol + v)\n"
-    	    "                    #else\n"
-    	    "                        #define inputColIdx (outputCol + v + gHalfFilterSize)\n"
-    	    "                    #endif\n"
-    	    "                    bool process = rowOk && inputColIdx >= 0 && inputColIdx < gInputSize;\n"
-    	    "                    if (process) {\n"
-    	    "                            sum += inputRow[inputColIdx] * filterRow[v];\n"
-    	    "                    }\n"
-    	    "                }\n"
-    	    "            }\n"
-    	    "        }\n"
-    		"		output[globalId] = sum;\n"
-    	    "    }\n"
-    	    "\n"
-    	    "}\n"
-    	    "\n"
-    	    "";
+    // const char * kernelSource =
+    // 	    "void kernel convolve_imagecubes_float2(\n"
+    // 	    "    const int numExamples,\n"
+    // 	    "      global const float *inputs, global const float *filters,\n"
+    // 	    "    global float *output) {\n"
+    // 	    "    int globalId = get_global_id(0);\n"
+    // 	    "\n"
+    // 	    "    int exampleId = (globalId / gOutputSizeSquared) / gNumFilters;\n"
+    // 	    "    int filterId = (globalId / gOutputSizeSquared) % gNumFilters;\n"
+    // 	    "\n"
+    // 	    "    // intraimage coords\n"
+    // 	    "    int outputRow = (globalId % gOutputSizeSquared) / gOutputSize;\n"
+    // 	    "    int outputCol = (globalId % gOutputSizeSquared) % gOutputSize;\n"
+    // 	    "\n"
+    // 	    "\n"
+    // 	    "    float sum = 0;\n"
+    // 	    "    if (exampleId < numExamples) {\n"
+    // 	    "        for (int inputPlaneIdx = 0; inputPlaneIdx < gNumInputPlanes; inputPlaneIdx++) {\n"
+    // 	    "            global float const*inputPlane = inputs + exampleId * gNumInputPlanes * gInputSizeSquared + inputPlaneIdx * gInputSizeSquared;\n"
+    // 	    "            global float const*filterPlane = filters + filterId * gNumInputPlanes * gFilterSizeSquared + inputPlaneIdx * gFilterSizeSquared;\n"
+    // 	    "            for (int u = -gHalfFilterSize; u <= gHalfFilterSize - gEven; u++) {\n"
+    // 	    "                // trying to reduce register pressure...\n"
+    // 	    "                #if gPadZeros == 1\n"
+    // 	    "                    #define inputRowIdx (outputRow + u)\n"
+    // 	    "                #else\n"
+    // 	    "                    #define inputRowIdx (outputRow + u + gHalfFilterSize)\n"
+    // 	    "                #endif\n"
+    // 	    "                global float const *inputRow = inputPlane + inputRowIdx * gInputSize;\n"
+    // 	    "                global float const *filterRow = filterPlane + (u+gHalfFilterSize) * gFilterSize + gHalfFilterSize;\n"
+    // 	    "                bool rowOk = inputRowIdx >= 0 && inputRowIdx < gInputSize;\n"
+    // 	    "                #pragma unroll\n"
+    // 	    "                for (int v = -gHalfFilterSize; v <= gHalfFilterSize - gEven; v++) {\n"
+    // 	    "                    #if gPadZeros == 1\n"
+    // 	    "                        #define inputColIdx (outputCol + v)\n"
+    // 	    "                    #else\n"
+    // 	    "                        #define inputColIdx (outputCol + v + gHalfFilterSize)\n"
+    // 	    "                    #endif\n"
+    // 	    "                    bool process = rowOk && inputColIdx >= 0 && inputColIdx < gInputSize;\n"
+    // 	    "                    if (process) {\n"
+    // 	    "                            sum += inputRow[inputColIdx] * filterRow[v];\n"
+    // 	    "                    }\n"
+    // 	    "                }\n"
+    // 	    "            }\n"
+    // 	    "        }\n"
+    // 		"		output[globalId] = sum;\n"
+    // 	    "    }\n"
+    // 	    "\n"
+    // 	    "}\n"
+    // 	    "\n"
+    // 	    "";
 
-    string operation="Forward1_"+std::to_string(dim.numFilters);
-    kernel = cl->buildKernelFromString(operation, kernelSource, "convolve_imagecubes_float2", options, "../../cl/forward1.cl");
+    // string operation="Forward1_"+std::to_string(dim.numFilters);
+    // kernel = cl->buildKernelFromString(operation, kernelSource, "convolve_imagecubes_float2", options, "../../cl/forward1.cl");
 
 
-    const char * kernelSource2 =
-    				"#pragma OPENCL EXTENSION cl_khr_fp16 : enable\n\n"
-    		        "void kernel convolve_imagecubes_half2(\n"
-    		        "    const int numExamples,\n"
-    		        "      global const half *inputs, global const half *filters,\n"
-    		        "    global half *output) {\n"
-    		        "    int globalId = get_global_id(0);\n"
-    		        "\n"
-    		        "    int outputImage2Id = globalId / gOutputSizeSquared;\n"
-    		        "    int exampleId = outputImage2Id / gNumFilters;\n"
-    		        "    int filterId = outputImage2Id % gNumFilters;\n"
-    		        "\n"
-    		        "    // intraimage coords\n"
-    		        "    int localid = globalId % gOutputSizeSquared;\n"
-    		        "    int outputRow = localid / gOutputSize;\n"
-    		        "    int outputCol = localid % gOutputSize;\n"
-    		        "\n"
-    		        "    global half const*inputCube = inputs + exampleId * gNumInputPlanes * gInputSizeSquared;\n"
-    		        "    global half const*filterCube = filters + filterId * gNumInputPlanes * gFilterSizeSquared;\n"
-    		        "\n"
-    		        "    half sum = 0;\n"
-    		        "    if (exampleId < numExamples) {\n"
-    		        "        for (int inputPlaneIdx = 0; inputPlaneIdx < gNumInputPlanes; inputPlaneIdx++) {\n"
-    		        "            global half const*inputPlane = inputCube + inputPlaneIdx * gInputSizeSquared;\n"
-    		        "            global half const*filterPlane = filterCube + inputPlaneIdx * gFilterSizeSquared;\n"
-    		        "            for (int u = -gHalfFilterSize; u <= gHalfFilterSize - gEven; u++) {\n"
-    		        "                // trying to reduce register pressure...\n"
-    		        "                #if gPadZeros == 1\n"
-    		        "                    #define inputRowIdx (outputRow + u)\n"
-    		        "                #else\n"
-    		        "                    #define inputRowIdx (outputRow + u + gHalfFilterSize)\n"
-    		        "                #endif\n"
-    		        "                global half const *inputRow = inputPlane + inputRowIdx * gInputSize;\n"
-    		        "                global half const *filterRow = filterPlane + (u+gHalfFilterSize) * gFilterSize + gHalfFilterSize;\n"
-    		        "                bool rowOk = inputRowIdx >= 0 && inputRowIdx < gInputSize;\n"
-    		        "                #pragma unroll\n"
-    		        "                for (int v = -gHalfFilterSize; v <= gHalfFilterSize - gEven; v++) {\n"
-    		        "                    #if gPadZeros == 1\n"
-    		        "                        #define inputColIdx (outputCol + v)\n"
-    		        "                    #else\n"
-    		        "                        #define inputColIdx (outputCol + v + gHalfFilterSize)\n"
-    		        "                    #endif\n"
-    		        "                    bool process = rowOk && inputColIdx >= 0 && inputColIdx < gInputSize;\n"
-    		        "                    if (process) {\n"
-    		        "                            sum += inputRow[inputColIdx] * filterRow[v];\n"
-    		        "                    }\n"
-    		        "                }\n"
-    		        "            }\n"
-    		        "        }\n"
-    		        "    }\n"
-    		        "\n"
-    		        "    if (exampleId < numExamples) {\n"
-    		        "        output[globalId] = sum;\n"
-    		        "    }\n"
-    		        "}\n"
-    		        "\n"
-    		        "";
-        string operation2="ForwardHalf1_"+std::to_string(dim.numFilters);
+    // const char * kernelSource2 =
+    // 				"#pragma OPENCL EXTENSION cl_khr_fp16 : enable\n\n"
+    // 		        "void kernel convolve_imagecubes_half2(\n"
+    // 		        "    const int numExamples,\n"
+    // 		        "      global const half *inputs, global const half *filters,\n"
+    // 		        "    global half *output) {\n"
+    // 		        "    int globalId = get_global_id(0);\n"
+    // 		        "\n"
+    // 		        "    int outputImage2Id = globalId / gOutputSizeSquared;\n"
+    // 		        "    int exampleId = outputImage2Id / gNumFilters;\n"
+    // 		        "    int filterId = outputImage2Id % gNumFilters;\n"
+    // 		        "\n"
+    // 		        "    // intraimage coords\n"
+    // 		        "    int localid = globalId % gOutputSizeSquared;\n"
+    // 		        "    int outputRow = localid / gOutputSize;\n"
+    // 		        "    int outputCol = localid % gOutputSize;\n"
+    // 		        "\n"
+    // 		        "    global half const*inputCube = inputs + exampleId * gNumInputPlanes * gInputSizeSquared;\n"
+    // 		        "    global half const*filterCube = filters + filterId * gNumInputPlanes * gFilterSizeSquared;\n"
+    // 		        "\n"
+    // 		        "    half sum = 0;\n"
+    // 		        "    if (exampleId < numExamples) {\n"
+    // 		        "        for (int inputPlaneIdx = 0; inputPlaneIdx < gNumInputPlanes; inputPlaneIdx++) {\n"
+    // 		        "            global half const*inputPlane = inputCube + inputPlaneIdx * gInputSizeSquared;\n"
+    // 		        "            global half const*filterPlane = filterCube + inputPlaneIdx * gFilterSizeSquared;\n"
+    // 		        "            for (int u = -gHalfFilterSize; u <= gHalfFilterSize - gEven; u++) {\n"
+    // 		        "                // trying to reduce register pressure...\n"
+    // 		        "                #if gPadZeros == 1\n"
+    // 		        "                    #define inputRowIdx (outputRow + u)\n"
+    // 		        "                #else\n"
+    // 		        "                    #define inputRowIdx (outputRow + u + gHalfFilterSize)\n"
+    // 		        "                #endif\n"
+    // 		        "                global half const *inputRow = inputPlane + inputRowIdx * gInputSize;\n"
+    // 		        "                global half const *filterRow = filterPlane + (u+gHalfFilterSize) * gFilterSize + gHalfFilterSize;\n"
+    // 		        "                bool rowOk = inputRowIdx >= 0 && inputRowIdx < gInputSize;\n"
+    // 		        "                #pragma unroll\n"
+    // 		        "                for (int v = -gHalfFilterSize; v <= gHalfFilterSize - gEven; v++) {\n"
+    // 		        "                    #if gPadZeros == 1\n"
+    // 		        "                        #define inputColIdx (outputCol + v)\n"
+    // 		        "                    #else\n"
+    // 		        "                        #define inputColIdx (outputCol + v + gHalfFilterSize)\n"
+    // 		        "                    #endif\n"
+    // 		        "                    bool process = rowOk && inputColIdx >= 0 && inputColIdx < gInputSize;\n"
+    // 		        "                    if (process) {\n"
+    // 		        "                            sum += inputRow[inputColIdx] * filterRow[v];\n"
+    // 		        "                    }\n"
+    // 		        "                }\n"
+    // 		        "            }\n"
+    // 		        "        }\n"
+    // 		        "    }\n"
+    // 		        "\n"
+    // 		        "    if (exampleId < numExamples) {\n"
+    // 		        "        output[globalId] = sum;\n"
+    // 		        "    }\n"
+    // 		        "}\n"
+    // 		        "\n"
+    // 		        "";
+    //     string operation2="ForwardHalf1_"+std::to_string(dim.numFilters);
 
-        options=options+" -qcom-accelerate-16-bit -qcom-sched-rule=2";
-        LOGI("option: %s ",options.c_str());
-        kernelH = cl->buildKernelFromString(operation2, kernelSource2, "convolve_imagecubes_half2", options, "../../cl/forward1.cl");
-#endif
+    //     options=options+" -qcom-accelerate-16-bit -qcom-sched-rule=2";
+    //     LOGI("option: %s ",options.c_str());
+    //     kernelH = cl->buildKernelFromString(operation2, kernelSource2, "convolve_imagecubes_half2", options, "../../cl/forward1.cl");
+// #endif
 
 //        string operation3="testForward1_"+std::to_string(dim.numFilters);
 //    test = cl->buildKernelFromString(operation3, kernelSource, "convolve_imagecubes_float2", options, "../../cl/forward1.cl");
@@ -588,13 +588,23 @@ void Forward1::buildKernelConvolve(int batchSize) {
 	ConfigManager*binariesManager=new ConfigManager( cl->absolutePath/*path,binaryFileRep*/);
 	bool compiled;
 	string filepath="default";
-	if (not binariesManager->alreadyCompiledKernel("convolve_imagecubes_float2","",identifier2,filepath)){
+	// if (not binariesManager->alreadyCompiledKernel("convolve_imagecubes_float2","",identifier2,filepath)){
 
 
-	    setupBuilderConvolve(&builder, batchSize);
-	}
+	//     setupBuilderConvolve(&builder, batchSize);
+
+	// }
+    setupBuilderConvolve(&builder, batchSize);
 
 
+    // std::ofstream out;
+    // string s=cl->absolutePath+identifier2+"_kernelcode.cpp";
+    // LOGI("writing to file: %s", s.c_str());
+    // out.open(s.c_str(), std::ios::app);
+    // out << identifier2;
+    // out << "\n";
+    // out << builder.getRenderedKernel(getKernelTemplateConvolve());
+    // out.close();
 
 
 

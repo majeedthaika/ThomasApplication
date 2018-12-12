@@ -68,7 +68,7 @@ CLKernel *TemplatedKernel::_buildKernel(std::string uniqueName, std::string file
     // cout << "building kernel " << uniqueName << endl;
     string renderedKernel = templater->render(templateSource);
 
-#if 0
+#if 1
     //this is just to see the content of the kernel in a text file
     std::ofstream out;
     string s=cl->absolutePath+uniqueName+"_kernelcode.cpp";
