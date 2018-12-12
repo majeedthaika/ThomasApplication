@@ -20,7 +20,7 @@
 #else
 #include <CL/cl.hpp>
 #endif
-#define DEEPCL_VERBOSE 0
+#define DEEPCL_VERBOSE 1
 //#endif
 
 #include <cstdlib>

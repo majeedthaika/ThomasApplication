@@ -1,3 +1,4 @@
+
 // Copyright Olivier Valery 2017 olivier.valery92 at gmail.com 
 // this work is based on DeepCL: a project of Hugh Perkins hughperkins at gmail
 //
@@ -12,6 +13,7 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
+#include <sys/time.h>
 
 #include "Trainable.h"
 

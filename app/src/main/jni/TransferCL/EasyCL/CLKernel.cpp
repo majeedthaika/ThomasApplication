@@ -75,6 +75,14 @@ CLKernel *CLKernel::input(CLArray *clarray1d) {
     return this;
 }
 
+std::string CLKernel::getSource() {
+    return this->source;
+}
+
+std::string CLKernel::getKernelName() {
+    return this->kernelName;
+}
+
 CLKernel *CLKernel::output(CLArray *clarray1d) {
     assert(clarray1d != 0);
     if(clarray1d->isOnHost()) {

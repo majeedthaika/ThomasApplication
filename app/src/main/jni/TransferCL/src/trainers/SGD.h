@@ -14,9 +14,10 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <sys/time.h>
 
 #include "Trainer.h"
-#define MEASURE_TIME_PER_OPPERATION 0
+#define MEASURE_TIME_PER_OPPERATION 1
 
 class SGDState;
 class CLWrapper;

@@ -7,6 +7,7 @@
 
 #include <stdexcept>
 #include <random>
+#include <sys/time.h>
 
 #include "../util/Timer.h"
 #include "../conv/ConvolutionalLayer.h"

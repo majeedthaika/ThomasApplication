@@ -41,9 +41,9 @@ LOGI( "DeepCL/src/util/RandomSingleton.cpp: RandomSingleton");
     myrandom.seed(seed);
 }
 PUBLIC STATIC RandomSingleton *RandomSingleton::instance() {
-#if TRANSFERCL_VERBOSE == 1
-LOGI( "DeepCL/src/util/RandomSingleton.cpp: instance");
-#endif
+// #if TRANSFERCL_VERBOSE == 1
+// LOGI( "DeepCL/src/util/RandomSingleton.cpp: instance");
+// #endif
 
 
     static RandomSingleton *thisinstance = new RandomSingleton();
@@ -53,17 +53,17 @@ LOGI( "DeepCL/src/util/RandomSingleton.cpp: instance");
 //        _instance = testinstance;
 //    }
 PUBLIC VIRTUAL float RandomSingleton::_uniform() {
-#if TRANSFERCL_VERBOSE == 1
-LOGI( "DeepCL/src/util/RandomSingleton.cpp: _uniform");
-#endif
+// #if TRANSFERCL_VERBOSE == 1
+// LOGI( "DeepCL/src/util/RandomSingleton.cpp: _uniform");
+// #endif
 
 
     return myrandom() / (float)myrandom.max();
 }
 PUBLIC STATIC float RandomSingleton::uniform() {
-#if TRANSFERCL_VERBOSE == 1
-LOGI( "DeepCL/src/util/RandomSingleton.cpp: uniform");
-#endif
+// #if TRANSFERCL_VERBOSE == 1
+// LOGI( "DeepCL/src/util/RandomSingleton.cpp: uniform");
+// #endif
 
 
     return instance()->_uniform();

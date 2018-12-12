@@ -172,7 +172,8 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
         //note: on our mobile device, if the program search the opencl accelerator, it will crash imediatly
         error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU  , 100, device_ids, &num_devices);
 #if DEEPCL_VERBOSE == 1
-        LOGI( "2");
+        string buildLogMessage = std::to_string(num_devices) + "\n";
+        LOGI("num_devices: %s", buildLogMessage.c_str());
 #endif
 
         if (error != CL_SUCCESS) {
@@ -228,7 +229,7 @@ EasyCL *EasyCL::createForIndexedDevice(int device, bool verbose) {
 //        cout << "checking platform id " << platform_id << endl;
         cl_device_id device_ids[100];
         cl_uint num_devices;
-        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL , 100, device_ids, &num_devices);
+        error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU , 100, device_ids, &num_devices);
         if (error != CL_SUCCESS) {
             continue;
 //           throw std::runtime_error("Error getting device ids for platform " + toString(platform) + ": " + errorMessage(error));
@@ -270,7 +271,7 @@ EasyCL *EasyCL::createForPlatformDeviceIndexes(int platformIndex, int deviceInde
     cl_platform_id platform_id = platform_ids[platformIndex];
     cl_device_id device_ids[100];
     cl_uint num_devices;
-    error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ALL, 100, device_ids, &num_devices);
+    error = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_CPU, 100, device_ids, &num_devices);
     if (error != CL_SUCCESS) {
        throw std::runtime_error("Error getting OpenCL device ids for platform index " + toString(platformIndex) + ": OpenCL errorcode: " + errorMessage(error));
     }
@@ -578,7 +579,6 @@ CLKernel *EasyCL::buildKernelFromString(string operation,string source, string k
 		compiled=false;
 	}
 
-
 	if(compiled){
 		//LOGI("--------------------------- the kernel has been prebuilt; OpenCL only need to create the program from the binary files ");
 		cl_program program = CreateProgramFromBinary(*context, device, filepath.c_str(),options.c_str());
@@ -617,6 +617,7 @@ CLKernel *EasyCL::buildKernelFromString(string operation,string source, string k
 
 
 	size_t src_size = 0;
+
     const char *source_char = source.c_str();
     src_size = strlen(source_char);
 //    cl_program program = new cl_program();

@@ -7,6 +7,7 @@
 
 
 #include <iostream>
+#include <sys/time.h>
 
 #include "../util/stringhelper.h"
 #include "../net/NeuralNet.h"

@@ -110,6 +110,9 @@ public:
     template<typename T> CLKernel *inout(int N, T *data);
     void run_1d(int global_worksize, int local_worksize);
     void run(int ND, const size_t *global_ws, const size_t *local_ws);
+
+    std::string getSource();
+    std::string getKernelName();
 };
 
 

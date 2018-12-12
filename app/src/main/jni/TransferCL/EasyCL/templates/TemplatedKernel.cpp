@@ -71,23 +71,24 @@ CLKernel *TemplatedKernel::_buildKernel(std::string uniqueName, std::string file
 #if 0
     //this is just to see the content of the kernel in a text file
     std::ofstream out;
-        string s=cl->absolutePath+"kernelcode.txt";
-           	     out.open(s.c_str()/*"/data/data/com.sony.openclexample1/preloadingData/kernelcode.txt"*/, std::ios::app);
-        	     out << uniqueName;
-        	     out << "\n";
-        	     out << renderedKernel;
-        	     out.close();
+    string s=cl->absolutePath+uniqueName+"_kernelcode.cpp";
+    out.open(s.c_str()/*"/data/data/com.sony.openclexample1/preloadingData/kernelcode.txt"*/, std::ios::app);
+    out << uniqueName;
+    out << "\n";
+    out << renderedKernel;
+    out.close();
 
-	if(useKernelStore) {
+	// if(useKernelStore) {
 //
 	////olivier
-	    std::ofstream out;
-	     out.open("/data/data/com.sony.openclexample1/preloadingData/forwardcode.txt", std::ios::app);
-	     out << renderedKernel;
-	     out.close();
+	    // std::ofstream out;
+	    //  out.open("/data/data/com.sony.openclexample1/preloadingData/forwardcode.txt", std::ios::app);
+	    //  out << renderedKernel;
+	    //  out.close();
 	    //cl->storeKernel(uniqueName, kernel, true);
-	}
+	// }
 #endif
+    // LOGI("kernel name: %s\nuniqueName name: %s\nfilename name: %s\n\n%s\n\n", kernelName.c_str(), uniqueName.c_str(), filename.c_str(), renderedKernel.c_str());
 	CLKernel *kernel = cl->buildKernelFromString(uniqueName,renderedKernel, kernelName, "", filename);
 
 	return kernel;

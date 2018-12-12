@@ -45,7 +45,7 @@ public:
     int workgroupsize;
     bool normalization;
 	#if TEST_FORWARD==1
-		const bool timeBenchmark=false;
+		const bool timeBenchmark=true;
 		clock_t startTimer1, stopTimer1;
 	#endif
 

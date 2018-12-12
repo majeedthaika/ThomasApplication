@@ -74,7 +74,7 @@ void PredictionModel::go0(ConfigPrediction config) {
 	WeightsPersister::loadConfigString(config.weightsFile, netDef);
 
 	net->addLayer(InputLayerMaker::instance()->numPlanes(numPlanes)->imageSize(imageSize));
-	net->addLayer(NormalizationLayerMaker::instance()->translate(0.0f)->scale(1.0f) ); // This will be read from weights file
+	// net->addLayer(NormalizationLayerMaker::instance()->translate(0.0f)->scale(1.0f) ); // This will be read from weights file
 
 	NetdefToNet::createNetFromNetdef(config.batchSize,net, netDef, weightsInitializer);
 
@@ -241,7 +241,7 @@ void PredictionModel::go(ConfigPrediction config) {
 
     net->addLayer(InputLayerMaker::instance()->numPlanes(numPlanes)->imageSize(imageSize));
 
-    net->addLayer(NormalizationLayerMaker::instance()->translate(0.0)->scale(1.0) ); // This will be read from weights file
+    // net->addLayer(NormalizationLayerMaker::instance()->translate(0.0)->scale(1.0) ); // This will be read from weights file
 
     if(!NetdefToNet::createNetFromNetdef(config.batchSize,net, netDef, weightsInitializer) ) {
         return;

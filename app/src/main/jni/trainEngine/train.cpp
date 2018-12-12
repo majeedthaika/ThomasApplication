@@ -117,12 +117,13 @@ string ConfigTraining::getOldTrainingString() {
 
 TrainModel::TrainModel(string absolutePath){
 
-//    if(config.gpuIndex >= 0) {
-//        cl = EasyCL::createForIndexedGpu(config.gpuIndex);
-//    } else {
-        cl = EasyCL::createForFirstGpuOtherwiseCpu();
-        cl->absolutePath=absolutePath;
-//    }
+	// ===GPU===
+    cl = EasyCL::createForFirstGpuOtherwiseCpu();
+
+    // ===CPU===
+    // cl = EasyCL::createForPlatformDeviceIndexes(0,0);
+
+    cl->absolutePath=absolutePath;
 
 }
 
@@ -288,7 +289,7 @@ void TrainModel::go(ConfigTraining config) {
 	    }
 	    LOGI("-----------Network Layer Generation");
 	    net->addLayer(InputLayerMaker::instance()->numPlanes(numPlanes)->imageSize(imageSize));
-	    net->addLayer(NormalizationLayerMaker::instance()->translate(translate)->scale(scale)->batch(config.batchSize));
+	    // net->addLayer(NormalizationLayerMaker::instance()->translate(translate)->scale(scale)->batch(config.batchSize));
 	    if(!NetdefToNet::createNetFromNetdef(config.batchSize,net, config.netDef, weightsInitializer)) {
 	    	LOGE( "--------------FATAL ERROR: neural network creation failed");
 	        return;

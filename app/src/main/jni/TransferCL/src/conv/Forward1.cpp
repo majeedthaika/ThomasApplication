@@ -9,9 +9,9 @@
 #include "../util/stringhelper.h"
 #include "../../EasyCL/util/StatefulTimer.h"
 
-#if TEST_FORWARD==1
-#include "AddBias.h"
-#endif
+// #if TEST_FORWARD==1
+// #include "AddBias.h"
+// #endif
 
 
 #include <sstream>
@@ -39,7 +39,7 @@ LOGI( "DeepCL/src/conv/Forward1.cpp: ~Forward1");
 #if TEST_FORWARD==1
 	delete kernelH;
 	delete kernel;
-    delete addBias;
+    // delete addBias;
 #endif
     delete test;
 }
@@ -150,11 +150,11 @@ stopTimer1 = clock();
 	LOGI("convolution took %g ms\n\n", 1000.0* (double)(stopTimer1 - startTimer1)/(double)CLOCKS_PER_SEC) ;
 
 	startTimer1=clock();
-    if(dim.biased) {
-        addBias->forward(
-            batchSize, dim.numFilters, dim.outputSize,
-            outputWrapper, biasWrapper);
-    }
+    // if(dim.biased) {
+    //     addBias->forward(
+    //         batchSize, dim.numFilters, dim.outputSize,
+    //         outputWrapper, biasWrapper);
+    // }
     StatefulTimer::timeCheck("Forward1::forward END");
 	stopTimer1 = clock();
 
@@ -214,6 +214,16 @@ VIRTUAL void Forward1::forwardHalf(int batchSize, CLWrapper *dataWrapper, CLWrap
     if (timeBenchmark)
 		startTimer1=clock();
     #endif
+    LOGI("test->run_1d(globalSize, workgroupsize);");
+
+    std::ofstream out;
+    string s=cl->absolutePath+test->getKernelName()+"_kernelcode.cpp";
+    out.open(s.c_str()/*"/data/data/com.sony.openclexample1/preloadingData/kernelcode.txt"*/, std::ios::app);
+    out << test->getKernelName();
+    out << "\n";
+    out << test->getSource();
+    out.close();
+
     test->run_1d(globalSize, workgroupsize);
     //cl->finish();
 
@@ -243,112 +253,112 @@ VIRTUAL void Forward1::forward(int batchSize, CLWrapper *dataWrapper, CLWrapper 
 if (false/*dim.useHalfMemory*/){
 
 
-	////////////////////////////
-		biasWrapper->copyToHost();
-		float *bias= (float *)biasWrapper->getHostArray();
-			half *biasHalf=new half[batchSize * dim.outputCubeSize];
-		for (int i=0; i<batchSize * dim.outputCubeSize;i++)
-			biasHalf[i] = FloatToHalf(bias[i]);
-		biasWrapper->copyToDevice();
-		CLWrapper *biasHalfWrapper = (CLWrapper *)cl->wrap(batchSize * dim.outputCubeSize, biasHalf);
-		biasHalfWrapper->createOnDevice();
-		biasHalfWrapper->copyToDevice();
-	/////
-	dataWrapper->copyToHost();
-	float *data= (float *)dataWrapper->getHostArray();
-		half *dataHalf=new half[dim.inputCubeSize*batchSize];
-		for (int i=0; i<dim.inputCubeSize*batchSize;i++)
-			dataHalf[i] = FloatToHalf(data[i]);
+// 	////////////////////////////
+// 		biasWrapper->copyToHost();
+// 		float *bias= (float *)biasWrapper->getHostArray();
+// 			half *biasHalf=new half[batchSize * dim.outputCubeSize];
+// 		for (int i=0; i<batchSize * dim.outputCubeSize;i++)
+// 			biasHalf[i] = FloatToHalf(bias[i]);
+// 		biasWrapper->copyToDevice();
+// 		CLWrapper *biasHalfWrapper = (CLWrapper *)cl->wrap(batchSize * dim.outputCubeSize, biasHalf);
+// 		biasHalfWrapper->createOnDevice();
+// 		biasHalfWrapper->copyToDevice();
+// 	/////
+// 	dataWrapper->copyToHost();
+// 	float *data= (float *)dataWrapper->getHostArray();
+// 		half *dataHalf=new half[dim.inputCubeSize*batchSize];
+// 		for (int i=0; i<dim.inputCubeSize*batchSize;i++)
+// 			dataHalf[i] = FloatToHalf(data[i]);
 
-		CLWrapper *dataHalfWrapper = (CLWrapper *)cl->wrap(dim.inputCubeSize*batchSize, dataHalf);
-		dataHalfWrapper->createOnDevice();
-		dataHalfWrapper->copyToDevice();
+// 		CLWrapper *dataHalfWrapper = (CLWrapper *)cl->wrap(dim.inputCubeSize*batchSize, dataHalf);
+// 		dataHalfWrapper->createOnDevice();
+// 		dataHalfWrapper->copyToDevice();
 
-///////////
-		float *weights= (float *)weightsWrapper->getHostArray();
-		half *weightsHalf=new half[dim.inputPlanes*dim.filterSizeSquared*dim.numFilters];
-		for (int j=0; j<dim.numFilters;j++)
-			for (int i=0; i<dim.inputPlanes*dim.filterSizeSquared;i++)
-				if (i<dim.inputPlanes*dim.filterSizeSquared)
-					weightsHalf[j*dim.inputPlanes*dim.filterSizeSquared+i] = FloatToHalf(weights[dim.filterSizeSquared*dim.inputPlanes*j+i]);
-				else
-					weightsHalf[j*dim.inputPlanes*dim.filterSizeSquared+i] = FloatToHalf(0.0);
-		CLWrapper *weightsHalfWrapper = (CLWrapper *)cl->wrap(/*dim.filterSizeSquared**/dim.inputPlanes*dim.filterSizeSquared*dim.numFilters/**dim.inputPlanes*/, weightsHalf);
-		weightsHalfWrapper->createOnDevice();
-		weightsHalfWrapper->copyToDevice();
-///////////
+// ///////////
+// 		float *weights= (float *)weightsWrapper->getHostArray();
+// 		half *weightsHalf=new half[dim.inputPlanes*dim.filterSizeSquared*dim.numFilters];
+// 		for (int j=0; j<dim.numFilters;j++)
+// 			for (int i=0; i<dim.inputPlanes*dim.filterSizeSquared;i++)
+// 				if (i<dim.inputPlanes*dim.filterSizeSquared)
+// 					weightsHalf[j*dim.inputPlanes*dim.filterSizeSquared+i] = FloatToHalf(weights[dim.filterSizeSquared*dim.inputPlanes*j+i]);
+// 				else
+// 					weightsHalf[j*dim.inputPlanes*dim.filterSizeSquared+i] = FloatToHalf(0.0);
+// 		CLWrapper *weightsHalfWrapper = (CLWrapper *)cl->wrap(/*dim.filterSizeSquared**/dim.inputPlanes*dim.filterSizeSquared*dim.numFilters/**dim.inputPlanes*/, weightsHalf);
+// 		weightsHalfWrapper->createOnDevice();
+// 		weightsHalfWrapper->copyToDevice();
+// ///////////
 
-	//////////////
-	half *outputHalf=new half[batchSize * dim.outputCubeSize];
-	for (int i=0; i<batchSize * dim.outputCubeSize;i++)
-		outputHalf[i] = FloatToHalf(0.0f);
-	CLWrapper *outputHalfWrapper= (CLWrapper *)cl->wrap(batchSize * dim.outputCubeSize,outputHalf);
-	LOGI("3");
-	outputHalfWrapper->createOnDevice();
-	outputHalfWrapper->copyToDevice();
-	//////////////
+// 	//////////////
+// 	half *outputHalf=new half[batchSize * dim.outputCubeSize];
+// 	for (int i=0; i<batchSize * dim.outputCubeSize;i++)
+// 		outputHalf[i] = FloatToHalf(0.0f);
+// 	CLWrapper *outputHalfWrapper= (CLWrapper *)cl->wrap(batchSize * dim.outputCubeSize,outputHalf);
+// 	LOGI("3");
+// 	outputHalfWrapper->createOnDevice();
+// 	outputHalfWrapper->copyToDevice();
+// 	//////////////
 
-	clock_t startTimer2, stopTimer2;
-	startTimer2=clock();
-	StatefulTimer::timeCheck("Forward1::forward START");
+// 	clock_t startTimer2, stopTimer2;
+// 	startTimer2=clock();
+// 	StatefulTimer::timeCheck("Forward1::forward START");
 
-	kernelH->in(batchSize);
-	kernelH->input(dataHalfWrapper);
-	kernelH->input(weightsHalfWrapper);
-	kernelH->output(outputHalfWrapper);
-	int globalSize2 = batchSize * dim.outputCubeSize;
-	int workgroupsize2 = kernelH->get_kernel_work_group_size();
-	LOGI("workgroupsize2 %d, workgroupsize2 %d",workgroupsize2, cl->getMaxWorkgroupSize());
-	globalSize2 = (( globalSize2 + workgroupsize2 - 1) / workgroupsize2) * workgroupsize2;
-	kernelH->run_1d(globalSize2, workgroupsize2);
-	cl->finish();
-
-
-	stopTimer2 = clock();
-		double elapse2 = 1000.0* (double)(stopTimer2 - startTimer2)/(double)CLOCKS_PER_SEC;
-		LOGI("convolution half took %g ms\n\n", 1000.0* (double)(stopTimer2 - startTimer2)/(double)CLOCKS_PER_SEC) ;
-
-	if(dim.biased) {
+// 	kernelH->in(batchSize);
+// 	kernelH->input(dataHalfWrapper);
+// 	kernelH->input(weightsHalfWrapper);
+// 	kernelH->output(outputHalfWrapper);
+// 	int globalSize2 = batchSize * dim.outputCubeSize;
+// 	int workgroupsize2 = kernelH->get_kernel_work_group_size();
+// 	LOGI("workgroupsize2 %d, workgroupsize2 %d",workgroupsize2, cl->getMaxWorkgroupSize());
+// 	globalSize2 = (( globalSize2 + workgroupsize2 - 1) / workgroupsize2) * workgroupsize2;
+// 	kernelH->run_1d(globalSize2, workgroupsize2);
+// 	cl->finish();
 
 
-	        addBias->forward2(
-	            batchSize, dim.numFilters, dim.outputSize,
-	            outputHalfWrapper, biasHalfWrapper);
-	        outputHalfWrapper->copyToHost();
-	        half * convh=(half*)outputHalfWrapper->getHostArray();
-	        	for (int i =0;i<batchSize * dim.outputCubeSize;i++){
-	        				output[i]=HalfToFloat(convh[i]);
-	        	}
-	        	outputWrapper->copyToDevice();
-	    }
+// 	stopTimer2 = clock();
+// 		double elapse2 = 1000.0* (double)(stopTimer2 - startTimer2)/(double)CLOCKS_PER_SEC;
+// 		LOGI("convolution half took %g ms\n\n", 1000.0* (double)(stopTimer2 - startTimer2)/(double)CLOCKS_PER_SEC) ;
+
+// 	// if(dim.biased) {
 
 
-	StatefulTimer::timeCheck("Forward1::forward after call forward");
+// 	//         addBias->forward2(
+// 	//             batchSize, dim.numFilters, dim.outputSize,
+// 	//             outputHalfWrapper, biasHalfWrapper);
+// 	//         outputHalfWrapper->copyToHost();
+// 	//         half * convh=(half*)outputHalfWrapper->getHostArray();
+// 	//         	for (int i =0;i<batchSize * dim.outputCubeSize;i++){
+// 	//         				output[i]=HalfToFloat(convh[i]);
+// 	//         	}
+// 	//         	outputWrapper->copyToDevice();
+// 	//     }
 
 
-	//outputWrapper->copyToHost();
+// 	StatefulTimer::timeCheck("Forward1::forward after call forward");
 
-//    LOGI("////////////conv////////");
-//
-//    float * conv=(float*)outputWrapper->getHostArray();
-//    int col=dim.outputSize;
-//    float sum=0.0f;
-//    for(int i =0;i<batchSize * dim.outputCubeSize; i++){
-//        sum+=abs(temp[i]-conv[i]);
-//    }
-//    LOGI("diff %f",sum);
 
-//    for(int i =0;i<10; i++){
-//    	LOGI("temp[i]=%f conv[i]=%f ",temp[i],conv[i]);
-//    }
-    delete biasHalfWrapper;
-    delete [] biasHalf;
-	delete dataHalfWrapper;
-	delete[] dataHalf;
-	delete weightsHalfWrapper;
-	delete[] weightsHalf;
-	delete outputHalfWrapper;
-	delete[] outputHalf;
+// 	//outputWrapper->copyToHost();
+
+// //    LOGI("////////////conv////////");
+// //
+// //    float * conv=(float*)outputWrapper->getHostArray();
+// //    int col=dim.outputSize;
+// //    float sum=0.0f;
+// //    for(int i =0;i<batchSize * dim.outputCubeSize; i++){
+// //        sum+=abs(temp[i]-conv[i]);
+// //    }
+// //    LOGI("diff %f",sum);
+
+// //    for(int i =0;i<10; i++){
+// //    	LOGI("temp[i]=%f conv[i]=%f ",temp[i],conv[i]);
+// //    }
+//     delete biasHalfWrapper;
+//     delete [] biasHalf;
+// 	delete dataHalfWrapper;
+// 	delete[] dataHalf;
+// 	delete weightsHalfWrapper;
+// 	delete[] weightsHalf;
+// 	delete outputHalfWrapper;
+// 	delete[] outputHalf;
 }else{
 
 	///////////////////////
@@ -371,11 +381,11 @@ LOGI("dim.outputCubeSize %d",dim.outputCubeSize);
     cl->finish();
     StatefulTimer::timeCheck("Forward1::forward after call forward");
 
-    if(dim.biased) {
-        addBias->forward(
-            batchSize, dim.numFilters, dim.outputSize,
-            outputWrapper, biasWrapper);
-    }
+    // if(dim.biased) {
+    //     addBias->forward(
+    //         batchSize, dim.numFilters, dim.outputSize,
+    //         outputWrapper, biasWrapper);
+    // }
     StatefulTimer::timeCheck("Forward1::forward END");
 
 
@@ -423,7 +433,7 @@ Forward1::Forward1(bool needToNormalize,int batchSize,EasyCL *cl, LayerDimension
 	normalization=needToNormalize;
 	setup=false;
 	#if TEST_FORWARD==1
-    	addBias = new AddBias(cl);
+    	// addBias = new AddBias(cl);
     	LOGI("2)numFilters %d",dim.numFilters);
 
     std::string options = "";
@@ -573,6 +583,7 @@ void Forward1::buildKernelConvolve(int batchSize) {
 		 identifier2=identifier2+"_normalize="+BoolToString(dim.needToNormalize);
 		 identifier2=identifier2+"_maxpool="+BoolToString(dim.useMaxPooling);
 
+    LOGI("identifier2: %s", identifier2.c_str());
 
 	ConfigManager*binariesManager=new ConfigManager( cl->absolutePath/*path,binaryFileRep*/);
 	bool compiled;
