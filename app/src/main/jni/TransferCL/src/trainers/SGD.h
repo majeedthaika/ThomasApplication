@@ -17,7 +17,7 @@
 #include <sys/time.h>
 
 #include "Trainer.h"
-#define MEASURE_TIME_PER_OPPERATION 1
+#define MEASURE_TIME_PER_OPPERATION 0
 
 class SGDState;
 class CLWrapper;

@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String fileNameStoreLabel= "/data/data/"+applicationName+"/directoryTest/mem2Character2ManifestMapFileLabel2.raw";
                 String fileNameStoreNormalization="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
 
-                prepareFiles("/data/data/"+applicationName+"/", fileNameStoreData,fileNameStoreLabel, fileNameStoreNormalization,"/mnt/sdcard/Download/manifest_trial.txt",16, 1);
+                prepareFiles("/data/data/"+applicationName+"/", fileNameStoreData,fileNameStoreLabel, fileNameStoreNormalization,"/mnt/sdcard/Download/manifest_mnist_train.txt",60000, 1);
 
             }
         };
@@ -189,8 +189,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String loadnormalizationfile="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
                 String networkDefinition="1s8c5z-relu-mp2-1s16c5z-relu-mp3-152n-tanh-10n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
                 int numepochs=1;
-                int batchsize=16;
-                int numtrain=16;
+                int batchsize=32;
+                int numtrain=60000;
                 float learningRate=0.01f;
 
                 String cmdString="train filename_label="+filename_label;
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Runnable runnable = new Runnable() {
             public void run() {
                 String appDirctory ="/data/data/"+applicationName+"/";
-                String cmdString ="./predict weightsfile=/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat  inputfile=/mnt/sdcard/Download/manifest_trial.txt outputfile=/data/data/"+applicationName+"/directoryTest/pred.txt batchsize=16";
+                String cmdString ="./predict weightsfile=/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat  inputfile=/mnt/sdcard/Download/manifest_mnist_test.txt outputfile=/data/data/"+applicationName+"/directoryTest/pred.txt batchsize=32";
                 prediction(appDirctory,cmdString);
 
             }
