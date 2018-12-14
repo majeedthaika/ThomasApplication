@@ -122,7 +122,7 @@ TrainModel::TrainModel(string absolutePath){
 
     // ===CPU===
     // cl = EasyCL::createForPlatformDeviceIndexes(0,0);
-
+    cl->setProfiling(true);
     cl->absolutePath=absolutePath;
 
 }

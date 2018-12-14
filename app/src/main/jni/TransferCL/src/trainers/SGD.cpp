@@ -352,7 +352,7 @@ VIRTUAL BatchResult SGD::trainNet(NeuralNet *net, TrainingContext *context,
 //    LOGI("-----------------one iteration took took %g ms\n\n", 1000.0* (double)(stopTimer1 - startTimer1)/(double)CLOCKS_PER_SEC) ;
 #endif
     //LOGI("###############################################################\n\n\n");
-
+            cl->dumpProfiling();
     	    return BatchResult(loss, numRight);
     	}
 

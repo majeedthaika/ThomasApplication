@@ -21,9 +21,9 @@ using namespace std;
 ConfigPrediction::ConfigPrediction() {
 //default parameters
 
-   gpuIndex = -1;
+   gpuIndex = 0;
    weightsFile = "";//"/data/data/com.sony.openclexample1/preloadingData/weightstTransferedTEST.dat";//"/data/data/com.sony.openclexample1/preloadingData/weightstface1.dat";//"/data/data/com.sony.openclexample1/app_execdir/weightstface1.dat";//weightstodelete.dat";///weightstface1.dat";//weightstodelete.dat";//weightsTest13july.dat";//"weights.dat";
-   batchSize = 128;
+   batchSize = 32;
    inputFile = "";
    outputFile = "";
    outputLayer = -1;
@@ -503,7 +503,7 @@ int PredictionModel::prepareConfig(int parameterNb, char *argList[]) {
         return -1;
     }
 
-    WormUpGPU(config);//the workload is very low (the result might be wrong if we don't worm up the gpu)
+    // WormUpGPU(config);//the workload is very low (the result might be wrong if we don't worm up the gpu)
 
     try {
         go(config);
