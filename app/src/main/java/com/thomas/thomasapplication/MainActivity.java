@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String storeweightsfile="/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat";
                 String loadweightsfile="/mnt/sdcard/Download/preloadingData/weightstface1.dat";
                 String loadnormalizationfile="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
-                String networkDefinition="4s96c11z-relu-mp3-1s256c5z-relu-mp3-1s384c3z-relu-1s384c3z-relu-1s256c3z-mp3-drop-4096n-relu-drop-4096n-relu-1000n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
+                String networkDefinition="1s64c3-relu-1s64c3-relu-mp2-1s128c3-relu-1s128c3-relu-mp2-1s256c3-relu-1s256c3-relu-mp2-1s512c3-relu-1s512c3-relu-mp2-1s512c3-relu-1s512c3-relu-mp2-4096n-relu-4096n-relu-1000n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
                 int numepochs=1;
                 int batchsize=32;
                 int numtrain=60000;
