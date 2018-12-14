@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String fileNameStoreLabel= "/data/data/"+applicationName+"/directoryTest/mem2Character2ManifestMapFileLabel2.raw";
                 String fileNameStoreNormalization="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
 
-                prepareFiles("/data/data/"+applicationName+"/", fileNameStoreData,fileNameStoreLabel, fileNameStoreNormalization,"/mnt/sdcard/Download/manifest_mnist_train.txt",60000, 1);
+                prepareFiles("/data/data/"+applicationName+"/", fileNameStoreData,fileNameStoreLabel, fileNameStoreNormalization,"/mnt/sdcard/Download/manifest_cifar_train.txt",60000, 1);
 
             }
         };
@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 String filename_label="/data/data/"+applicationName+"/directoryTest/mem2Character2ManifestMapFileLabel2.raw";
                 String filename_data="/data/data/"+applicationName+"/directoryTest/mem2Character2ManifestMapFileData2.raw";
-                int imageSize=28;
-                int numOfChannel=1;//black and white => 1; color =>3
+                int imageSize=32;
+                int numOfChannel=3;//black and white => 1; color =>3
                 String storeweightsfile="/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat";
                 String loadweightsfile="/mnt/sdcard/Download/preloadingData/weightstface1.dat";
                 String loadnormalizationfile="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Runnable runnable = new Runnable() {
             public void run() {
                 String appDirctory ="/data/data/"+applicationName+"/";
-                String cmdString ="./predict weightsfile=/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat  inputfile=/mnt/sdcard/Download/manifest_mnist_test.txt outputfile=/data/data/"+applicationName+"/directoryTest/pred.txt batchsize=32";
+                String cmdString ="./predict weightsfile=/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat  inputfile=/mnt/sdcard/Download/manifest_cifar_test.txt outputfile=/data/data/"+applicationName+"/directoryTest/pred.txt batchsize=32";
                 prediction(appDirctory,cmdString);
 
             }
