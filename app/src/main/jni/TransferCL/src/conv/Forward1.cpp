@@ -695,9 +695,10 @@ STATIC std::string Forward1::getKernelTemplateConvolve() {
 
 
 	const char * kernelSource =
+                "#pragma OPENCL EXTENSION cl_khr_fp16 : enable\n\n"
 	    	    "void kernel {{gHintCompiler}}convolve_imagecubes_float2(\n"
 	    	    "    const __global {{gVectorType}}* restrict inputs, __constant {{gVectorType}} *filters,\n"
-	    	    "    global float *output {{gBias}} {{gNormalization}} {{gPoolingOutputSelector}}) {\n"
+	    	    "    global half *output {{gBias}} {{gNormalization}} {{gPoolingOutputSelector}}) {\n"
 	    	    "    const int globalId = get_global_id(0);\n"
 	    	    "\n"
 	    	    "    int exampleId = ((globalId) {{DIVgOutputSizeSquared}}) / {{gNumFilters}};\n"
@@ -751,7 +752,7 @@ void Forward1::setNonPoolingLayerVariable(TemplatedKernel *builder,string &endPo
 		builder->set("gImageRowCoord", (dim.outputSizeSquared!=1) ? (dim.stride!=1) ? "int outputRow = ((globalId % {{gOutputSizeSquared}}) {{DIVgOutputSize}})*"+to_string(dim.stride)+";\n":"int outputRow = (globalId % {{gOutputSizeSquared}}) {{DIVgOutputSize}};\n":"");
 	builder->set("DIVgOutputSize", (dim.outputSize!=1)? "/"+to_string(dim.outputSize):"");
 	builder->set("DIVgOutputSizeSquared", (dim.outputSizeSquared!=1)? "/"+to_string(dim.outputSizeSquared):"");
-	builder->set("gSum", ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "dot( sum,(float4)(1.0f,1.0f,1.0f,1.0f))":"sum"));
+	builder->set("gSum", ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "dot( sum,(half4)(1.0f,1.0f,1.0f,1.0f))":"sum"));
 	builder->set("gMaxPooling", "");
 	builder->set("gMaxPoolingEnd", "");
 }
@@ -778,7 +779,7 @@ void  Forward1::setActivationFunction(TemplatedKernel *builder){
 
 void Forward1::setPoolingLayer(    string &outputPoolingSelectorString,string &endPoolingString,string &endPoolingString2,string &poolingSelectorString, TemplatedKernel *builder){
 
-	poolingSelectorString=", global int * selectorArray, global float *gradInput";
+	poolingSelectorString=", global int * selectorArray, global half *gradInput";
 
 	if((dim.outputSize-dim.maxPool_spatialExtent)%dim.maxPool_strides==0){
 
@@ -821,7 +822,7 @@ void Forward1::setPoolingLayer(    string &outputPoolingSelectorString,string &e
 		builder->set("DIVgOutputSizeSquared", (dim.outputSizeSquared!=1)? "/"+to_string(dim.maxPool_sizeOutput*dim.maxPool_sizeOutput):"");
 		builder->set("DIVgOutputSizeSquared2", (dim.outputSizeSquared!=1)? "/"+to_string(dim.outputSizeSquared):"");
 		builder->set("gSum", "sum");
-		string maxPoolingBegin="float maxPool=-999.99f;\n"
+		string maxPoolingBegin="half maxPool=-999.99f;\n"
 								"    int selectorID=100;\n"
 						        "    #pragma unroll\n"
 								"    for(int p1=0;p1<"+to_string(dim.maxPool_spatialExtent)+";p1++){\n"
@@ -888,7 +889,7 @@ void Forward1::setPoolingLayer(    string &outputPoolingSelectorString,string &e
 		string conditionString2="(((((globalId) % ("+to_string(dim.maxPool_sizeOutput*dim.maxPool_sizeOutput)+")) % ("+to_string(dim.maxPool_sizeOutput)+"))*"+to_string(dim.stride*dim.maxPool_strides)+"+"+to_string(dim.maxPool_strides)+")=="+to_string((dim.outputSize/dim.maxPool_strides)*dim.maxPool_strides)+")";
 		string conditionString="("+conditionString1+"||"+conditionString2+")";
 
-		string maxPoolingBegin="float maxPool=-999.99f;\n"
+		string maxPoolingBegin="half maxPool=-999.99f;\n"
 									   "    int selectorID=100;\n"
 				                       "    #pragma unroll\n"
 									   "    for(int p1=0;p1<"+to_string(dim.maxPool_spatialExtent)+";p1++){\n"
@@ -899,7 +900,7 @@ void Forward1::setPoolingLayer(    string &outputPoolingSelectorString,string &e
 		//note olivier: select dynamically the maxpooling size (for example 3 for all and 4 for the last one)
 		// however it is really slow
 
-//		string maxPoolingBegin="float maxPool=-999.99f;\n"
+//		string maxPoolingBegin="half maxPool=-999.99f;\n"
 //							   "    int selectorID=100;\n"
 //							   "    for(int p1=0;p1<select("+extentString+","+extentPLUSRemainerString+","+conditionString+");p1++){\n"
 //							   "      for(int p2=0;p2<select("+extentString+","+extentPLUSRemainerString+","+conditionString+");p2++){\n";
@@ -934,11 +935,11 @@ void Forward1::setAutoVectorization(int &vectorSize,int &remainerPartialVectoriz
 		int size =dim.filterSize;
 		int cpt=0;
 		vectorSize=4;
-		partialVectorizationType="float4";
-		partialVectorizationLoad="(*((__global float4*)&";
-		constantMemPartialVectorizationLoad="(*((__constant float4*)&";
-		initString="(float4)(0.0f,0.0f,0.0f,0.0f)";
-		dotString="(float4)(1.0f,1.0f,1.0f,1.0f)";
+		partialVectorizationType="half4";
+		partialVectorizationLoad="(*((__global half4*)&";
+		constantMemPartialVectorizationLoad="(*((__constant half4*)&";
+		initString="(half4)(0.0f,0.0f,0.0f,0.0f)";
+		dotString="(half4)(1.0f,1.0f,1.0f,1.0f)";
 
 		loop_count_partialVectorization=floor((size)/4);
 		remainerPartialVectorization=floor((size)%4);
@@ -946,7 +947,7 @@ void Forward1::setAutoVectorization(int &vectorSize,int &remainerPartialVectoriz
 			cpt=0;
 			initializationCondition="";
 			for(int i=-(dim.filterSize >> 1);i<(vectorSize-(dim.filterSize >> 1));i++){
-				initializationCondition+="            conditionVector.s"+indexOpencl.at(cpt)+"=((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+1+"+to_string(i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i)+"),0,1)));\n";
+				initializationCondition+="            conditionVector.s"+indexOpencl.at(cpt)+"=((half)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+1+"+to_string(i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i)+"),0,1)));\n";
 				cpt++;
 			}
 		}
@@ -958,12 +959,12 @@ if (loop_count_partialVectorization>=1){
 			initializationCondition="";
 
 				loop_string_partialVectorization="for (int v = -{{gHalfFilterSize}}; v < -{{gHalfFilterSize}}+"+to_string(loop_count_partialVectorization*vectorSize)+"; v+="+to_string(vectorSize)+"){\n";
-				loop_string_partialVectorization+="            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
-												 "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
+				loop_string_partialVectorization+="            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
+												 "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
 
 				cpt=0;
 				for(int i=0;i<(vectorSize);i++){
-						loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+v+1+"+to_string(i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i)+"+v),0,1)));\n";
+						loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((half)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+v+1+"+to_string(i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i)+"+v),0,1)));\n";
 						cpt++;
 					}
 
@@ -981,14 +982,14 @@ if (loop_count_partialVectorization>=1){
 					extra_loop_string_partialVectorization="";
 					if (loop_count_partialVectorization>1){
 						loop_string_partialVectorization="for (int v = -{{gHalfFilterSize}}; v < -{{gHalfFilterSize}}+"+to_string(loop_count_partialVectorization*vectorSize)+"; v+="+to_string(vectorSize)+"){\n";
-						loop_string_partialVectorization+="              float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
-														 "              float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
+						loop_string_partialVectorization+="              half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
+														 "              half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
 
 						loop_string_partialVectorization+= "              sum+=dot( (inputsV*filterV),"+dotString+");\n            }\n            ";
 					}else{
 
-						loop_string_partialVectorization= "            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition-{{gHalfFilterSize}})]));\n";
-						loop_string_partialVectorization+= "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx-{{gHalfFilterSize}})]));\n";
+						loop_string_partialVectorization= "            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition-{{gHalfFilterSize}})]));\n";
+						loop_string_partialVectorization+= "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx-{{gHalfFilterSize}})]));\n";
 						loop_string_partialVectorization+= "sum+=dot( (inputsV*filterV),"+dotString+");\n";
 
 					}
@@ -998,8 +999,8 @@ if (loop_count_partialVectorization>=1){
 						if ((ok1)&&((dim.filterSize >> 1)==1)){
 							extra_loop_string_partialVectorization=partialVectorizationType+" conditionVector;\n";
 
-							extra_loop_string_partialVectorization+="             float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
-																 "             float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
+							extra_loop_string_partialVectorization+="             half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
+																 "             half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
 
 								cpt=0;
 								for(int i=0;i<(remainerPartialVectorization);i++){
@@ -1018,8 +1019,8 @@ if (loop_count_partialVectorization>=1){
 								extra_loop_string_partialVectorization=partialVectorizationType+" conditionVector;\n";
 /////////////////////////
 								if (loop_count_partialVectorization>1){
-									extra_loop_string_partialVectorization+="            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
-																	 "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
+									extra_loop_string_partialVectorization+="            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
+																	 "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
 								}else{
 									extra_loop_string_partialVectorization+="             inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
 																	 "             filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
@@ -1052,8 +1053,8 @@ if (loop_count_partialVectorization>=1){
 					if (remainerPartialVectorization!=0){
 						extra_loop_string_partialVectorization=partialVectorizationType+" conditionVector;\n";
 						extra_loop_string_partialVectorization+="          for (int v = -{{gHalfFilterSize}}+"+to_string((int)((loop_count_partialVectorization)*vectorSize))+"; v < -{{gHalfFilterSize}}+"+to_string(((loop_count_partialVectorization))*vectorSize+remainerPartialVectorization)+"; v+="+to_string(vectorSize)+"){\n";
-							extra_loop_string_partialVectorization+="            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
-															 "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
+							extra_loop_string_partialVectorization+="            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
+															 "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
 
 							cpt=0;
 							for(int i=0;i<(remainerPartialVectorization);i++){
@@ -1076,13 +1077,13 @@ if (loop_count_partialVectorization>=1){
 			}else{
 
 				if (normalization){
-					loop_string_partialVectorization= "            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition-{{gHalfFilterSize}})]));\n";
-					loop_string_partialVectorization+= "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx-{{gHalfFilterSize}})]));\n";
+					loop_string_partialVectorization= "            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition-{{gHalfFilterSize}})]));\n";
+					loop_string_partialVectorization+= "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx-{{gHalfFilterSize}})]));\n";
 					loop_string_partialVectorization+= "sum+=dot( scale*(inputsV+translate)*filterV,conditionVector);\n";
 				}
 				else{
-					loop_string_partialVectorization= "            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition-{{gHalfFilterSize}})]));\n";
-					loop_string_partialVectorization+= "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx-{{gHalfFilterSize}})]));\n";
+					loop_string_partialVectorization= "            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition-{{gHalfFilterSize}})]));\n";
+					loop_string_partialVectorization+= "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx-{{gHalfFilterSize}})]));\n";
 					loop_string_partialVectorization+= "sum+=dot( inputsV*filterV,conditionVector);\n";
 				}
 			}
@@ -1094,8 +1095,8 @@ if (loop_count_partialVectorization>=1){
 
 				int v=-(dim.filterSize >> 1)+loop_count_partialVectorization*vectorSize;
 				if (loop_count_partialVectorization>1){
-					extra_loop_string_partialVectorization="           float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
-													 "           float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
+					extra_loop_string_partialVectorization="           half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
+													 "           half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
 				}else{
 					extra_loop_string_partialVectorization="            inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
 												 "            filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
@@ -1103,7 +1104,7 @@ if (loop_count_partialVectorization>=1){
 
 				cpt=0;
 				for(int i=0;i<(remainerPartialVectorization);i++){
-						extra_loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+"+to_string(v+1+i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i+v)+"),0,1)));\n";
+						extra_loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((half)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+"+to_string(v+1+i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i+v)+"),0,1)));\n";
 						cpt++;
 					}
 				for(int i=remainerPartialVectorization;i<(vectorSize);i++){
@@ -1118,12 +1119,12 @@ if (loop_count_partialVectorization>=1){
 			}else{
 
 				extra_loop_string_partialVectorization="for (int v = -{{gHalfFilterSize}}+"+to_string((int)((loop_count_partialVectorization)*vectorSize))+"; v < -{{gHalfFilterSize}}+"+to_string(((loop_count_partialVectorization))*vectorSize+remainerPartialVectorization)+"; v+="+to_string(vectorSize)+"){\n";
-				extra_loop_string_partialVectorization+="            float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
-												 "            float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
+				extra_loop_string_partialVectorization+="            half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+v]));\n"
+												 "            half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+v)]));\n";
 
 				cpt=0;
 				for(int i=0;i<(remainerPartialVectorization);i++){
-						extra_loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+v+1+"+to_string(i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i)+"+v),0,1)));\n";
+						extra_loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((half)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+v+1+"+to_string(i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i)+"+v),0,1)));\n";
 						cpt++;
 					}
 				for(int i=remainerPartialVectorization;i<(vectorSize);i++){
@@ -1142,11 +1143,11 @@ if (loop_count_partialVectorization>=1){
 			initializationCondition="";//no need
 			loop_string_partialVectorization="";//no need
 			int v=-(dim.filterSize >> 1)+loop_count_partialVectorization*vectorSize;
-			extra_loop_string_partialVectorization="           float4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
-													 "           float4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
+			extra_loop_string_partialVectorization="           half4 inputsV = "+partialVectorizationLoad+" inputs[(inputPosition)+"+to_string(v)+"]));\n"
+													 "           half4 filterV = "+constantMemPartialVectorizationLoad+" filters[(filterRowIdx+"+to_string(v)+")]));\n";
 			cpt=0;
 			for(int i=0;i<(remainerPartialVectorization);i++){
-				extra_loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+"+to_string(v+1+i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i+v)+"),0,1)));\n";
+				extra_loop_string_partialVectorization+="               conditionVector.s"+indexOpencl.at(cpt)+"=((half)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx2}}+"+to_string(v+1+i)+",0,1)*clamp({{gInputSize}}-({{inputColIdx2}}+"+to_string(i+v)+"),0,1)));\n";
 				cpt++;
 			}
 			for(int i=remainerPartialVectorization;i<(vectorSize);i++){
@@ -1168,14 +1169,14 @@ void Forward1::setHintCompiler(int batchSize,bool &fullvectorization,bool &parti
 
 	string hintCompilerString="__attribute__((vec_type_hint(";
 	if ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0)))
-		hintCompilerString+="float4";
+		hintCompilerString+="half4";
 	else{
 		if ((not fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0)))
-			hintCompilerString+="float";
+			hintCompilerString+="half";
 		else
 			if (partialvectorization)
 				hintCompilerString+=partialVectorizationType;
-			else hintCompilerString+="float";
+			else hintCompilerString+="half";
 	}
 
 	hintCompilerString+="))) __attribute__((work_group_size_hint("+to_string(possibleWorkgroupsize)+", 1, 1))) ";
@@ -1259,8 +1260,8 @@ void Forward1::writeKernelcode(TemplatedKernel *builder,string outputPoolingSele
 	builder->set("outputPoolingSelector", outputPoolingSelectorString);
 	builder->set("gPoolingOutputSelector", poolingSelectorString);
 
-	builder->set("gNormalization", normalization? "    ,\n float translate, float scale":"");
-	builder->set("gVectorType",((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "float4":"float"));
+	builder->set("gNormalization", normalization? "    ,\n half translate, half scale":"");
+	builder->set("gVectorType",((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "half4":"half"));
 
 	builder->set("gPlusInputPlaneIdxTimeGFilterSizeSquared",(dim.inputPlanes==1)? "":"+ planeId * {{gFilterSizeSquared}}");
 	builder->set("gInternalLoop",((dim.outputSize!=1)||(((dim.filterSize >> 1)!=0)))? normalization? partialvectorization? internalLoopStringNormalization:internalLoopString1norm:partialvectorization? internalLoopString1withPartialVectorization:internalLoopString1:internalLoopString2);
@@ -1270,13 +1271,13 @@ void Forward1::writeKernelcode(TemplatedKernel *builder,string outputPoolingSele
 	builder->set("gPlusInputPlaneIdxTimeGInputSizeSquared",(dim.inputPlanes==1)? "":"+ planeId * {{gInputSizeSquared}}");
 
 	builder->set("gBeginFirstLoop",(dim.inputPlanes==1)? "":((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "      #pragma unroll\n    for (int planeId = 0; planeId < "+to_string((dim.inputPlanes/4))+"; planeId++) {\n":"      #pragma unroll\n    for (int planeId = 0; planeId < {{gNumInputPlanes}}; planeId++) {\n"));
-	builder->set("gCondition", ok1 ? "":(((dim.filterSize >> 1)!=0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2)) !=0))? "*((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputColIdx}},0,1)))":"");
+	builder->set("gCondition", ok1 ? "":(((dim.filterSize >> 1)!=0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2)) !=0))? "*((half)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputColIdx}},0,1)))":"");
 	builder->set("gHalfFilterSizeMinusGEven", (dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0));
 	builder->set("gNumInputPlanesTimeGFilterSizeSquared", ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? (dim.inputPlanes*dim.filterSizeSquared/4):dim.inputPlanes*dim.filterSizeSquared));
 	builder->set("gNumInputPlanesTimeGInputSizeSquared", ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? ((dim.inputPlanes*dim.inputSizeSquared)/4):dim.inputPlanes*dim.inputSizeSquared));
 	builder->set("gLimit", batchSize * dim.numFilters * dim.outputSize * dim.outputSize);
 
-	builder->set("gBias", dim.biased? ", __constant  float * bias":" ");
+	builder->set("gBias", dim.biased? ", __constant  half * bias":" ");
 	builder->set("gNumExamples", batchSize);
 	builder->set("inputRowIdx", (dim.outputSizeSquared!=1) ? dim.padZeros ? "(outputRow + u)" : "(outputRow + u + {{gHalfFilterSize}})": dim.padZeros ? "(u)" : "(u + {{gHalfFilterSize}})");
 	builder->set("inputRowIdx2", (dim.outputSizeSquared!=1) ? dim.padZeros ? "(outputRow + u)" : "(outputRow + u + {{gHalfFilterSize}})": dim.padZeros ? "(u)" : "(u + {{gHalfFilterSize}})");
