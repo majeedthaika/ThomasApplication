@@ -160,7 +160,7 @@ void CLWrapper::copyToDevice() {
 
         createOnDevice();
     }
-    error = clEnqueueWriteBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, getHostArrayConst(), 0, NULL, NULL);
+    error = clEnqueueWriteBuffer(*(cl->queue), devicearray, CL_FALSE, 0, getElementSize() * N, getHostArrayConst(), 0, NULL, NULL);
     cl->checkError(error);
     deviceDirty = false;
 }
@@ -219,7 +219,7 @@ void CLWrapper::copyToDevice(const void * buffer) {
         LOGI("not onDevice: we have to create it");
         createOnDevice();
     }
-    error = clEnqueueWriteBuffer(*(cl->queue), devicearray, CL_TRUE, 0, getElementSize() * N, buffer, 0, NULL, NULL);
+    error = clEnqueueWriteBuffer(*(cl->queue), devicearray, CL_FALSE, 0, getElementSize() * N, buffer, 0, NULL, NULL);
     cl->checkError(error);
     deviceDirty = false;
 }
