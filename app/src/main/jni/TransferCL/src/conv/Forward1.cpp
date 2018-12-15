@@ -632,8 +632,8 @@ void Forward1::setupBuilderConvolve(TemplatedKernel *builder,int batchSize) {
 	string internalLoopString2="default";
 	string internalLoopStringNormalization="default";
 	string internalLoopString1withPartialVectorization="default";
-	bool fullvectorization=true;
-	bool partialvectorization=true;
+	bool fullvectorization=false;
+	bool partialvectorization=false;
 	bool ok1=true;
 	int loop_count_partialVectorization=0;
 	int remainerPartialVectorization=0;
