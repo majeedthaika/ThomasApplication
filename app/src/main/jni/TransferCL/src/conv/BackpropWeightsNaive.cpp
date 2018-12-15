@@ -1404,6 +1404,8 @@ if (dim.isConv){
 void BackpropWeightsNaive::setHintCompiler(int batchSize, TemplatedKernel *builder){
 	int possibleGlobalSize = batchSize*dim.filtersSize;
 	int possibleWorkgroupsize =  batchSize;//kernel2->get_kernel_work_group_size();//cl->getMaxWorkgroupSize();
+    int possibleWorkgroupsize_arg1 = (int)std::sqrt(possibleWorkgroupsize);
+    int possibleWorkgroupsize_arg2 = (int)std::sqrt(possibleWorkgroupsize);
 
 	possibleGlobalSize = ((possibleGlobalSize + possibleWorkgroupsize - 1) / possibleWorkgroupsize) * possibleWorkgroupsize;
 
@@ -1414,7 +1416,7 @@ void BackpropWeightsNaive::setHintCompiler(int batchSize, TemplatedKernel *build
 		hintCompilerString+="float";
 	}
 
-	hintCompilerString+="))) __attribute__((work_group_size_hint("+to_string(possibleWorkgroupsize)+", 1, 1))) ";
+	hintCompilerString+="))) __attribute__((work_group_size_hint("+to_string(possibleWorkgroupsize_arg1)+", "+to_string(possibleWorkgroupsize_arg2)+", 1))) ";
 
 	builder->set("gHintCompiler", hintCompilerString);
 }

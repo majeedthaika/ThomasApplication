@@ -176,7 +176,7 @@ VIRTUAL void Forward1::forwardHalf(int batchSize, CLWrapper *dataWrapper, CLWrap
 	float * selector =0;
 	if (setup!=true){
 		if (dim.useMaxPooling)
-			globalSize = batchSize * dim.numFilters *dim. maxPool_sizeOutput*dim.maxPool_sizeOutput;
+			globalSize = batchSize * dim.numFilters * (dim.maxPool_sizeOutput*dim.maxPool_sizeOutput);
 		else
 			globalSize = batchSize * dim.outputCubeSize;
 		workgroupsize = test->get_kernel_work_group_size();
@@ -371,6 +371,13 @@ if (false/*dim.useHalfMemory*/){
     kernel->input(weightsWrapper);
     kernel->output(outputWrapper);
 LOGI("dim.outputCubeSize %d",dim.outputCubeSize);
+    kernel->localFloats(square(dim.inputSize) );
+    kernel->localFloats(square(dim.filterSize) * dim.inputPlanes);
+
+    int workgroupsize = std::max(32, square(dim.outputSize) ); // no point in wasting threads....
+    int numWorkgroups = dim.numFilters * batchSize;
+    int globalSize = workgroupsize * numWorkgroups;
+
     int globalSize = batchSize * dim.outputCubeSize;
     int workgroupsize = kernel->get_kernel_work_group_size();
     //int workgroupsize = std::min(globalSize, cl->getMaxWorkgroupSize());
@@ -1164,7 +1171,9 @@ if (loop_count_partialVectorization>=1){
 
 void Forward1::setHintCompiler(int batchSize,bool &fullvectorization,bool &partialvectorization,string &partialVectorizationType,TemplatedKernel *builder){
 	int possibleGlobalSize = batchSize * dim.outputCubeSize;
-	int possibleWorkgroupsize = std::min(possibleGlobalSize, cl->getMaxWorkgroupSize());
+    int possibleWorkgroupsize = std::min(possibleGlobalSize, cl->getMaxWorkgroupSize());
+    int possibleWorkgroupsize_arg1 = (int)std::sqrt(possibleWorkgroupsize);
+    int possibleWorkgroupsize_arg2 = (int)std::sqrt(possibleWorkgroupsize);
 
 	string hintCompilerString="__attribute__((vec_type_hint(";
 	if ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0)))
@@ -1178,7 +1187,7 @@ void Forward1::setHintCompiler(int batchSize,bool &fullvectorization,bool &parti
 			else hintCompilerString+="float";
 	}
 
-	hintCompilerString+="))) __attribute__((work_group_size_hint("+to_string(possibleWorkgroupsize)+", 1, 1))) ";
+	hintCompilerString+="))) __attribute__((work_group_size_hint("+to_string(possibleWorkgroupsize_arg1)+", "+to_string(possibleWorkgroupsize_arg2)+", 1))) ";
 
 	builder->set("gHintCompiler", hintCompilerString);
 }
