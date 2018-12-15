@@ -397,8 +397,8 @@ CLFloatWrapperConst *EasyCL::wrap(int N, float const*source) {
 }
 
 CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname) {
-    std::string options = "-cl-fast-relaxed-math -cl-finite-math-only -cl-unsafe-math-optimizations -cl-no-signed-zeros -cl-mad-enable";
-    // std::string options = "-cl-opt-disable -cl-strict-aliasing";
+    // std::string options = "-cl-fast-relaxed-math -cl-finite-math-only -cl-unsafe-math-optimizations -cl-no-signed-zeros -cl-mad-enable";
+    std::string options = "-cl-opt-disable -cl-strict-aliasing";
     return buildKernel(kernelfilepath, kernelname, options);
 }
 
