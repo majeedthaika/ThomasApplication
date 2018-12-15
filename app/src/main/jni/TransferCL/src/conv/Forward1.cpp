@@ -474,7 +474,7 @@ Forward1::Forward1(bool needToNormalize,int batchSize,EasyCL *cl, LayerDimension
     // 	    "                global float const *inputRow = inputPlane + inputRowIdx * gInputSize;\n"
     // 	    "                global float const *filterRow = filterPlane + (u+gHalfFilterSize) * gFilterSize + gHalfFilterSize;\n"
     // 	    "                bool rowOk = inputRowIdx >= 0 && inputRowIdx < gInputSize;\n"
-    // 	    "                #pragma unroll\n"
+    // 	    "                \n"
     // 	    "                for (int v = -gHalfFilterSize; v <= gHalfFilterSize - gEven; v++) {\n"
     // 	    "                    #if gPadZeros == 1\n"
     // 	    "                        #define inputColIdx (outputCol + v)\n"
@@ -534,7 +534,7 @@ Forward1::Forward1(bool needToNormalize,int batchSize,EasyCL *cl, LayerDimension
     // 		        "                global half const *inputRow = inputPlane + inputRowIdx * gInputSize;\n"
     // 		        "                global half const *filterRow = filterPlane + (u+gHalfFilterSize) * gFilterSize + gHalfFilterSize;\n"
     // 		        "                bool rowOk = inputRowIdx >= 0 && inputRowIdx < gInputSize;\n"
-    // 		        "                #pragma unroll\n"
+    // 		        "                \n"
     // 		        "                for (int v = -gHalfFilterSize; v <= gHalfFilterSize - gEven; v++) {\n"
     // 		        "                    #if gPadZeros == 1\n"
     // 		        "                        #define inputColIdx (outputCol + v)\n"
@@ -823,9 +823,9 @@ void Forward1::setPoolingLayer(    string &outputPoolingSelectorString,string &e
 		builder->set("gSum", "sum");
 		string maxPoolingBegin="float maxPool=-999.99f;\n"
 								"    int selectorID=100;\n"
-						        "    #pragma unroll\n"
+						        "    \n"
 								"    for(int p1=0;p1<"+to_string(dim.maxPool_spatialExtent)+";p1++){\n"
-								"      #pragma unroll\n"
+								"      \n"
 								"      for(int p2=0;p2<"+to_string(dim.maxPool_spatialExtent)+";p2++){\n";
 		string maxPoolingEnd="  }\n}\n";
 		builder->set("gMaxPooling", maxPoolingBegin);
@@ -890,9 +890,9 @@ void Forward1::setPoolingLayer(    string &outputPoolingSelectorString,string &e
 
 		string maxPoolingBegin="float maxPool=-999.99f;\n"
 									   "    int selectorID=100;\n"
-				                       "    #pragma unroll\n"
+				                       "    \n"
 									   "    for(int p1=0;p1<"+to_string(dim.maxPool_spatialExtent)+";p1++){\n"
-									   "      #pragma unroll\n"
+									   "      \n"
 									   "      for(int p2=0;p2<"+to_string(dim.maxPool_spatialExtent)+";p2++){\n";
 
 		//note olivier: the next three commented line => special case if the maxpool size = odd nb and the remainer of the image size divided by the maxpoopl size is not equal to 0
@@ -1185,21 +1185,21 @@ void Forward1::setHintCompiler(int batchSize,bool &fullvectorization,bool &parti
 
 void Forward1::setInternalLoop(bool ok1,int loop_count_partialVectorization,string &internalLoopString1,string& internalLoopString1norm,string &internalLoopString2,string &internalLoopStringNormalization,string &internalLoopString1withPartialVectorization,string initializationCondition,string loop_string_partialVectorization,string extra_loop_string_partialVectorization,string partialVectorizationType,string partialVectorizationLoad,string constantMemPartialVectorizationLoad){
 
-	internalLoopString1="#pragma unroll\n"
+	internalLoopString1="\n"
 								"        for (int u = -{{gHalfFilterSize}}; u <= {{gHalfFilterSizeMinusGEven}}; u++) {\n"
 								"            int inputRow = inputPlaneIdx + {{inputRowIdx}} * {{gInputSize}};\n"
 								"            int filterRowIdx=filterIdx+ (u+{{gHalfFilterSize}}) * {{gFilterSize}} + {{gHalfFilterSize}};\n"
-								"            #pragma unroll\n"
+								"            \n"
 								"            for (int v = -{{gHalfFilterSize}}; v <= {{gHalfFilterSizeMinusGEven}}; v++) {\n"
 								"               sum += inputs[inputRow + {{inputColIdx}}] * filters[filterRowIdx+v] {{gCondition}};\n"
 								"            }\n"
 								"        }\n";
 
-	internalLoopString1norm="#pragma unroll\n"
+	internalLoopString1norm="\n"
 								"        for (int u = -{{gHalfFilterSize}}; u <= {{gHalfFilterSizeMinusGEven}}; u++) {\n"
 								"            int inputRow = inputPlaneIdx + {{inputRowIdx}} * {{gInputSize}};\n"
 								"            int filterRowIdx=filterIdx+ (u+{{gHalfFilterSize}}) * {{gFilterSize}} + {{gHalfFilterSize}};\n"
-								"            #pragma unroll\n"
+								"            \n"
 								"            for (int v = -{{gHalfFilterSize}}; v <= {{gHalfFilterSizeMinusGEven}}; v++) {\n"
 								"               sum += scale*(inputs[inputRow + {{inputColIdx}}]+translate) * filters[filterRowIdx+v] {{gCondition}};\n"
 								"            }\n"
@@ -1212,7 +1212,7 @@ void Forward1::setInternalLoop(bool ok1,int loop_count_partialVectorization,stri
 		internalLoopStringNormalization+=partialVectorizationType+" conditionVector;\n";
 	if (loop_count_partialVectorization!=1){
 
-		internalLoopStringNormalization+="#pragma unroll\n"
+		internalLoopStringNormalization+="\n"
 									"        for (int u = -{{gHalfFilterSize}}; u <= {{gHalfFilterSizeMinusGEven}}; u++) {\n"
 									"            \n"+initializationCondition+"\n"
 									"            int inputPosition = inputPlaneIdx + {{inputRowIdx}} * {{gInputSize}}+ {{inputColIdx2}};\n"
@@ -1221,7 +1221,7 @@ void Forward1::setInternalLoop(bool ok1,int loop_count_partialVectorization,stri
 									"            "+extra_loop_string_partialVectorization+""
 									"        }\n";
 	}else{
-		internalLoopStringNormalization+="#pragma unroll\n"
+		internalLoopStringNormalization+="\n"
 									"        for (int u = -{{gHalfFilterSize}}; u <= {{gHalfFilterSizeMinusGEven}}; u++) {\n"
 									"            \n"+initializationCondition+"\n"
 									"            int inputPosition = inputPlaneIdx + {{inputRowIdx}} * {{gInputSize}}+ {{inputColIdx2}};\n"
@@ -1234,7 +1234,7 @@ void Forward1::setInternalLoop(bool ok1,int loop_count_partialVectorization,stri
 	if (not ok1)
 		internalLoopString1withPartialVectorization+=partialVectorizationType+" conditionVector;\n";
 	if ((ok1)&&((dim.filterSize >> 1)==1)){
-		internalLoopString1withPartialVectorization+="#pragma unroll\n"
+		internalLoopString1withPartialVectorization+="\n"
 								"        for (int u = -{{gHalfFilterSize}}; u <= {{gHalfFilterSizeMinusGEven}}; u++) {\n"
 								"            \n"+initializationCondition+"\n"
 								"            int inputPosition = inputPlaneIdx + {{inputRowIdx}} * {{gInputSize}}+ {{inputColIdx2}};\n"
@@ -1243,7 +1243,7 @@ void Forward1::setInternalLoop(bool ok1,int loop_count_partialVectorization,stri
 								"        }\n";
 	}else{
 
-	internalLoopString1withPartialVectorization+="#pragma unroll\n"
+	internalLoopString1withPartialVectorization+="\n"
 								"        for (int u = -{{gHalfFilterSize}}; u <= {{gHalfFilterSizeMinusGEven}}; u++) {\n"
 								"            \n"+initializationCondition+"\n"
 								"            int inputPosition = inputPlaneIdx + {{inputRowIdx}} * {{gInputSize}}+ {{inputColIdx2}};\n"
@@ -1269,7 +1269,7 @@ void Forward1::writeKernelcode(TemplatedKernel *builder,string outputPoolingSele
 	builder->set("gPlusInputPlaneIdxTimeGFilterSizeSquared",(dim.inputPlanes==1)? "":"+ planeId * {{gFilterSizeSquared}}");
 	builder->set("gPlusInputPlaneIdxTimeGInputSizeSquared",(dim.inputPlanes==1)? "":"+ planeId * {{gInputSizeSquared}}");
 
-	builder->set("gBeginFirstLoop",(dim.inputPlanes==1)? "":((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "      #pragma unroll\n    for (int planeId = 0; planeId < "+to_string((dim.inputPlanes/4))+"; planeId++) {\n":"      #pragma unroll\n    for (int planeId = 0; planeId < {{gNumInputPlanes}}; planeId++) {\n"));
+	builder->set("gBeginFirstLoop",(dim.inputPlanes==1)? "":((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? "      \n    for (int planeId = 0; planeId < "+to_string((dim.inputPlanes/4))+"; planeId++) {\n":"      \n    for (int planeId = 0; planeId < {{gNumInputPlanes}}; planeId++) {\n"));
 	builder->set("gCondition", ok1 ? "":(((dim.filterSize >> 1)!=0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2)) !=0))? "*((float)(clamp({{inputRowIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputRowIdx}},0,1)*clamp({{inputColIdx}}+1,0,1)*clamp({{gInputSize}}-{{inputColIdx}},0,1)))":"");
 	builder->set("gHalfFilterSizeMinusGEven", (dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0));
 	builder->set("gNumInputPlanesTimeGFilterSizeSquared", ((fullvectorization)&&(dim.outputSize==1)&&((dim.filterSize >> 1)==0)&&(((dim.filterSize >> 1)-(dim.filterSize % 2 == 0 ? 1 : 0) ==0))? (dim.inputPlanes*dim.filterSizeSquared/4):dim.inputPlanes*dim.filterSizeSquared));
