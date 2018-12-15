@@ -105,7 +105,7 @@ EasyCL *EasyCL::createForFirstGpuOtherwiseCpu(bool verbose) {
         return createForIndexedGpu(0, verbose);
     } catch(std::runtime_error error) {
 #if DEEPCL_VERBOSE == 1
-    	LOGI( "Couldnt find OpenCL-enabled GPU");
+        LOGI( "Couldnt find OpenCL-enabled GPU");
 #endif
 
         cout << "Couldnt find OpenCL-enabled GPU: " << error.what() << endl;
@@ -132,7 +132,7 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
 //        }
 //    #endif
 #if DEEPCL_VERBOSE == 1
-	LOGI( "createForIndexedGpu");
+    LOGI( "createForIndexedGpu");
 #endif
 
     cl_int error;
@@ -142,14 +142,14 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
     error = clGetPlatformIDs(10, platform_ids, &num_platforms);
     if (error != CL_SUCCESS) {
 #if DEEPCL_VERBOSE == 1
-    	LOGI( "Error getting OpenCL platforms ids");
+        LOGI( "Error getting OpenCL platforms ids");
 #endif
 
        throw std::runtime_error("Error getting OpenCL platforms ids, OpenCL errorcode: " + errorMessage(error));
     }
     if(num_platforms == 0) {
 #if DEEPCL_VERBOSE == 1
-    	LOGI( "Error: no OpenCL platforms available");
+        LOGI( "Error: no OpenCL platforms available");
 #endif
 
        throw std::runtime_error("Error: no OpenCL platforms available");
@@ -178,7 +178,7 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
 
         if (error != CL_SUCCESS) {
 #if DEEPCL_VERBOSE == 1
-        	LOGI( "Error getting device ids for platform");
+            LOGI( "Error getting device ids for platform");
 #endif
 
             continue;
@@ -193,13 +193,13 @@ EasyCL *EasyCL::createForIndexedGpu(int gpu, bool verbose) {
     }
     if(gpu == 0) {
 #if DEEPCL_VERBOSE == 1
-    	LOGI( "No OpenCL-enabled GPUs found");
+        LOGI( "No OpenCL-enabled GPUs found");
 #endif
 
         throw std::runtime_error("No OpenCL-enabled GPUs found");
     } else {
 #if DEEPCL_VERBOSE == 1
-    	LOGI( "Not enough OpenCL-enabled GPUs found to satisfy gpu index");
+        LOGI( "Not enough OpenCL-enabled GPUs found to satisfy gpu index");
 #endif
 
         throw std::runtime_error("Not enough OpenCL-enabled GPUs found to satisfy gpu index: " + toString(gpu) );
@@ -401,7 +401,7 @@ CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname) {
 }
 
 //CLHalfWrapper *EasyCL::wrap(int N, half *source) {
-//	//olivier
+//  //olivier
 //    return new CLHalfWrapper(N, source, this);
 //}
 
@@ -432,7 +432,7 @@ bool SaveProgramBinary(cl_program program, cl_device_id device, const char* file
                               devices, NULL);
     if (errNum != CL_SUCCESS)
     {
-    	LOGE( "Error querying for devices.");
+        LOGE( "Error querying for devices.");
         delete [] devices;
         return false;
     }
@@ -444,7 +444,7 @@ bool SaveProgramBinary(cl_program program, cl_device_id device, const char* file
                               programBinarySizes, NULL);
     if (errNum != CL_SUCCESS)
     {
-    	LOGE( "Error querying for program binary sizes.");
+        LOGE( "Error querying for program binary sizes.");
         delete [] devices;
         delete [] programBinarySizes;
         return false;
@@ -461,7 +461,7 @@ bool SaveProgramBinary(cl_program program, cl_device_id device, const char* file
                               programBinaries, NULL);
     if (errNum != CL_SUCCESS)
     {
-    	 LOGE( "Error querying for program binaries");
+         LOGE( "Error querying for program binaries");
 
         delete [] devices;
         delete [] programBinarySizes;
@@ -504,11 +504,11 @@ bool SaveProgramBinary(cl_program program, cl_device_id device, const char* file
 //
 cl_program CreateProgramFromBinary(cl_context context, cl_device_id device, const char* fileName, const char* options)
 {
-	//LOGI("CreateProgramFromBinary start %s",fileName);
+    //LOGI("CreateProgramFromBinary start %s",fileName);
     FILE *fp = fopen(fileName, "rb");
     if (fp == NULL)
     {
-    	LOGE("-------------------------- ERREOR CreateProgramFromBinary %s not found",fileName);
+        LOGE("-------------------------- ERREOR CreateProgramFromBinary %s not found",fileName);
         return NULL;
     }
 
@@ -536,14 +536,14 @@ cl_program CreateProgramFromBinary(cl_context context, cl_device_id device, cons
     delete [] programBinary;
     if (errNum != CL_SUCCESS)
     {
-    	LOGE("Error loading program binary.");
+        LOGE("Error loading program binary.");
         //std::cerr << "Error loading program binary." << std::endl;
         return NULL;
     }
 
     if (binaryStatus != CL_SUCCESS)
     {
-    	LOGE("Invalid binary for device");
+        LOGE("Invalid binary for device");
         //std::cerr << "Invalid binary for device" << std::endl;
         return NULL;
     }
@@ -569,55 +569,54 @@ cl_program CreateProgramFromBinary(cl_context context, cl_device_id device, cons
 CLKernel *EasyCL::buildKernelFromString(string operation,string source, string kernelname, string options, string sourcefilename) {
 
 
-	binariesManager=new ConfigManager(absolutePath);
+    binariesManager=new ConfigManager(absolutePath);
 
-	bool compiled;
-	string filepath="default";
-	// if (binariesManager->alreadyCompiledKernel(kernelname,options,operation,filepath)){
-	// 	compiled=true;
-	// }else {
-	// 	compiled=false;
-	// }
-    compiled=false;
+    bool compiled;
+    string filepath="default";
+    if (binariesManager->alreadyCompiledKernel(kernelname,options,operation,filepath)){
+        compiled=true;
+    }else {
+        compiled=false;
+    }
 
-	if(compiled){
-		//LOGI("--------------------------- the kernel has been prebuilt; OpenCL only need to create the program from the binary files ");
-		cl_program program = CreateProgramFromBinary(*context, device, filepath.c_str(),options.c_str());
+    if(compiled){
+        //LOGI("--------------------------- the kernel has been prebuilt; OpenCL only need to create the program from the binary files ");
+        cl_program program = CreateProgramFromBinary(*context, device, filepath.c_str(),options.c_str());
 
-		cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
-		if(error != CL_SUCCESS) {
-			vector<std::string> splitSource = easycl::split(source, "\n");
-			std::string sourceWithNumbers = "\nkernel source:\n";
-			for(int i = 0; i < (int)splitSource.size(); i++) {
-				sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
-			}
-			sourceWithNumbers += "\n";
-			std::string exceptionMessage = "";
-			switch(error) {
-				case -46:
-					LOGE("EasyCL::buildKernelFromString: error 46 (opencl)");
-					exceptionMessage = sourceWithNumbers + "\nInvalid kernel name, code -46, kernel " + kernelname + "\n";
-					break;
-				default:
-					exceptionMessage = sourceWithNumbers + "\nSomething went wrong with clCreateKernel, OpenCL erorr code " + toString(error) + "\n";
-					break;
-			}
-			cout << "kernel build error:\n" << exceptionMessage << endl;
-			throw std::runtime_error(exceptionMessage);
-		}
-		checkError(error);
+        cl_kernel kernel = clCreateKernel(program, kernelname.c_str(), &error);
+        if(error != CL_SUCCESS) {
+            vector<std::string> splitSource = easycl::split(source, "\n");
+            std::string sourceWithNumbers = "\nkernel source:\n";
+            for(int i = 0; i < (int)splitSource.size(); i++) {
+                sourceWithNumbers += toString(i + 1) + ": " + splitSource[i] + "\n";
+            }
+            sourceWithNumbers += "\n";
+            std::string exceptionMessage = "";
+            switch(error) {
+                case -46:
+                    LOGE("EasyCL::buildKernelFromString: error 46 (opencl)");
+                    exceptionMessage = sourceWithNumbers + "\nInvalid kernel name, code -46, kernel " + kernelname + "\n";
+                    break;
+                default:
+                    exceptionMessage = sourceWithNumbers + "\nSomething went wrong with clCreateKernel, OpenCL erorr code " + toString(error) + "\n";
+                    break;
+            }
+            cout << "kernel build error:\n" << exceptionMessage << endl;
+            throw std::runtime_error(exceptionMessage);
+        }
+        checkError(error);
 
-		CLKernel *clk=new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
+        CLKernel *clk=new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
 
-		return clk;
+        return clk;
 }else{
-	//LOGI("--------------------------- the kernel hasn't been prebuilt; we need to build it in OpenCL");
+    //LOGI("--------------------------- the kernel hasn't been prebuilt; we need to build it in OpenCL");
 
 
 
 
 
-	size_t src_size = 0;
+    size_t src_size = 0;
 
     const char *source_char = source.c_str();
     src_size = strlen(source_char);
@@ -653,7 +652,7 @@ CLKernel *EasyCL::buildKernelFromString(string operation,string source, string k
         std::string exceptionMessage = "";
         switch(error) {
             case -46:
-            	LOGE("EasyCL::buildKernelFromString: error 46 (opencl) %s",buildLogMessage.c_str());
+                LOGE("EasyCL::buildKernelFromString: error 46 (opencl) %s",buildLogMessage.c_str());
                 exceptionMessage = /*sourceWithNumbers +*/ "\nInvalid kernel name, code -46, kernel " + kernelname + "\n" + buildLogMessage;
                 break;
             default:
@@ -675,8 +674,8 @@ CLKernel *EasyCL::buildKernelFromString(string operation,string source, string k
 
     return new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
 
-	}
-	delete binariesManager;
+    }
+    delete binariesManager;
 }
 
 bool EasyCL::isOpenCLAvailable() {
@@ -848,4 +847,3 @@ CLKernel *EasyCL::getKernel(std::string name) {
 bool EasyCL::kernelExists(std::string name) {
     return kernelByName.count(name) != 0;
 }
-
