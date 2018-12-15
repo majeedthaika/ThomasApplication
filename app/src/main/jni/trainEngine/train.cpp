@@ -122,6 +122,7 @@ TrainModel::TrainModel(string absolutePath){
 
     // ===CPU===
     // cl = EasyCL::createForPlatformDeviceIndexes(0,0);
+    cl->setProfiling(true);
 
     cl->absolutePath=absolutePath;
 
@@ -358,6 +359,7 @@ void TrainModel::go(ConfigTraining config) {
 
 	    }
 	    (dynamic_cast<NeuralNet*>(net))->cl->finish();
+	    cl->dumpProfiling();
 
 		#if SAVENETWORK ==1
 				WeightsPersister::persistWeights(config.weightsFile, config.getTrainingString(), net, netLearner->getNextEpoch(), 0, 0, 0, 0);

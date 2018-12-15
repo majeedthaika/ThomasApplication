@@ -274,10 +274,10 @@ void CLKernel::run_1d(int global_worksize, int local_worksize) {
 void CLKernel::run(int ND, const size_t *global_ws, const size_t *local_ws) {
 	//cout << "running kernel" << std::endl;
   cl_event *event = 0;
-//  if(easycl->profilingOn) {
-//    event = new cl_event();
-//    easycl->pushEvent(sourceFilename + "." + kernelName, event);
-//  }
+	 if(easycl->profilingOn) {
+	   event = new cl_event();
+	   easycl->pushEvent(sourceFilename + "." + kernelName, event);
+	 }
 	error = clEnqueueNDRangeKernel(*(easycl->queue), kernel, ND, NULL, global_ws, local_ws, 0, NULL, event);
   if(error != 0) {
       vector<std::string> splitSource = easycl::split(source, "\n");

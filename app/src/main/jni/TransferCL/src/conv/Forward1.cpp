@@ -214,7 +214,7 @@ VIRTUAL void Forward1::forwardHalf(int batchSize, CLWrapper *dataWrapper, CLWrap
     if (timeBenchmark)
 		startTimer1=clock();
     #endif
-    LOGI("test->run_1d(globalSize, workgroupsize);");
+    // LOGI("test->run_1d(globalSize, workgroupsize);");
 
     // std::ofstream out;
     // string s=cl->absolutePath+test->getKernelName()+"_kernelcode.cpp";
@@ -583,7 +583,7 @@ void Forward1::buildKernelConvolve(int batchSize) {
 		 identifier2=identifier2+"_normalize="+BoolToString(dim.needToNormalize);
 		 identifier2=identifier2+"_maxpool="+BoolToString(dim.useMaxPooling);
 
-    LOGI("identifier2: %s", identifier2.c_str());
+    // LOGI("identifier2: %s", identifier2.c_str());
 
 	ConfigManager*binariesManager=new ConfigManager( cl->absolutePath/*path,binaryFileRep*/);
 	bool compiled;

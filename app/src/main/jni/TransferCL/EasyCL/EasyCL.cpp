@@ -764,7 +764,8 @@ void EasyCL::dumpProfiling() {
     delete event;
   }
   for(map< string, double >::iterator it = timeByKernel.begin(); it != timeByKernel.end(); it++) {
-    cout << it->first << " " << it->second << "ms" << endl;
+    // cout << it->first << " " << it->second << "ms" << endl;
+    LOGI("kernel: %s, %fms", it->first.c_str(), it->second);
   }
   profilingNames.clear();
   profilingEvents.clear();
