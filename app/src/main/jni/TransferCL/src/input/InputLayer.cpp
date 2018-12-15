@@ -204,8 +204,8 @@ LOGI( "DeepCL/src/input/InputLayer.cpp: forward");
 //for(int i=0;i<20;i++){
 //	LOGI("input[%d]=%f ",i,input[i]);
 //}
-//outputWrapper->copyToDevice(input);
-outputWrapper->copyToDevice_ZeroCopyObject_WriteFlag(input);
+outputWrapper->copyToDevice(input);
+// outputWrapper->copyToDevice_ZeroCopyObject_WriteFlag(input);
 //    int totalLinearLength = getOutputNumElements();
 //    for(int i = 0; i < totalLinearLength; i++) {
 //        output[i] = input[i];
