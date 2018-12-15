@@ -588,13 +588,13 @@ void Forward1::buildKernelConvolve(int batchSize) {
 	ConfigManager*binariesManager=new ConfigManager( cl->absolutePath/*path,binaryFileRep*/);
 	bool compiled;
 	string filepath="default";
-	// if (not binariesManager->alreadyCompiledKernel("convolve_imagecubes_float2","",identifier2,filepath)){
+	if (not binariesManager->alreadyCompiledKernel("convolve_imagecubes_float2","",identifier2,filepath)){
 
 
-	//     setupBuilderConvolve(&builder, batchSize);
+	    setupBuilderConvolve(&builder, batchSize);
 
-	// }
-    setupBuilderConvolve(&builder, batchSize);
+	}
+    // setupBuilderConvolve(&builder, batchSize);
 
 
     // std::ofstream out;

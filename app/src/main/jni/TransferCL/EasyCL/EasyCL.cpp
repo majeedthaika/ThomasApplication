@@ -573,11 +573,11 @@ CLKernel *EasyCL::buildKernelFromString(string operation,string source, string k
 
 	bool compiled;
 	string filepath="default";
-	// if (binariesManager->alreadyCompiledKernel(kernelname,options,operation,filepath)){
-	// 	compiled=true;
-	// }else {
-	// 	compiled=false;
-	// }
+	if (binariesManager->alreadyCompiledKernel(kernelname,options,operation,filepath)){
+		compiled=true;
+	}else {
+		compiled=false;
+	}
     compiled=false;
 
 	if(compiled){
