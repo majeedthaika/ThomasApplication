@@ -397,7 +397,9 @@ CLFloatWrapperConst *EasyCL::wrap(int N, float const*source) {
 }
 
 CLKernel *EasyCL::buildKernel(string kernelfilepath, string kernelname) {
-    return buildKernel(kernelfilepath, kernelname, "");
+    std::string options = "-cl-fast-relaxed-math -cl-finite-math-only -cl-unsafe-math-optimizations -cl-no-signed-zeros -cl-mad-enable";
+    // std::string options = "-cl-opt-disable -cl-strict-aliasing";
+    return buildKernel(kernelfilepath, kernelname, options);
 }
 
 //CLHalfWrapper *EasyCL::wrap(int N, half *source) {
@@ -548,7 +550,7 @@ cl_program CreateProgramFromBinary(cl_context context, cl_device_id device, cons
         return NULL;
     }
 //    errNum = clBuildProgram(program, 1, &device, options, NULL, NULL);
-    errNum = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
+    errNum = clBuildProgram(program, 0, NULL, options, NULL, NULL);
     if (errNum != CL_SUCCESS)
     {
         // Determine the reason for the error
