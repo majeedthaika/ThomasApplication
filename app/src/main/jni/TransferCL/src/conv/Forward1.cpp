@@ -594,6 +594,7 @@ void Forward1::buildKernelConvolve(int batchSize) {
         setupBuilderConvolve(&builder, batchSize);
 
     }
+
     // setupBuilderConvolve(&builder, batchSize);
 
 

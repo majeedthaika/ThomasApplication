@@ -568,7 +568,6 @@ cl_program CreateProgramFromBinary(cl_context context, cl_device_id device, cons
 
 CLKernel *EasyCL::buildKernelFromString(string operation,string source, string kernelname, string options, string sourcefilename) {
 
-
     binariesManager=new ConfigManager(absolutePath);
 
     bool compiled;
@@ -609,6 +608,7 @@ CLKernel *EasyCL::buildKernelFromString(string operation,string source, string k
         CLKernel *clk=new CLKernel(this, sourcefilename, kernelname, source, program, kernel);
 
         return clk;
+
 }else{
     //LOGI("--------------------------- the kernel hasn't been prebuilt; we need to build it in OpenCL");
 
