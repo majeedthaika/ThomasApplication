@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String fileNameStoreLabel= "/data/data/"+applicationName+"/directoryTest/mem2Character2ManifestMapFileLabel2.raw";
                 String fileNameStoreNormalization="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
 
-                prepareFiles("/data/data/"+applicationName+"/", fileNameStoreData,fileNameStoreLabel, fileNameStoreNormalization,"/mnt/sdcard/Download/manifest_mnist_train.txt",1000, 1);
+                prepareFiles("/data/data/"+applicationName+"/", fileNameStoreData,fileNameStoreLabel, fileNameStoreNormalization,"/mnt/sdcard/Download/manifest_imagenet.txt",1000, 3);
 
             }
         };
@@ -187,7 +187,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String storeweightsfile="/data/data/"+applicationName+"/directoryTest/weightstTransferedTEST.dat";
                 String loadweightsfile="/mnt/sdcard/Download/preloadingData/weightstface1.dat";
                 String loadnormalizationfile="/data/data/"+applicationName+"/directoryTest/normalizationTranfer.txt";
-                String networkDefinition="1s8c5z-relu-mp2-1s16c5z-relu-mp3-152n-tanh-10n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
+                // String networkDefinition="1s8c5z-relu-mp2-1s16c5z-relu-mp3-152n-tanh-10n";// see https://github.com/hughperkins/DeepCL/blob/master/doc/Commandline.md
+                String networkDefinition="4s96c11z-relu-mp3-1s256c5z-relu-mp3-1s384c3z-relu-1s384c3z-relu-1s256c3z-mp3-drop-4096n-relu-drop-4096n-relu-1000n";
                 int numepochs=1;
                 int batchsize=32;
                 int numtrain=1000;
